@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://cwyyb1dyqvx04"]
+
+[ext_resource type="Script" uid="uid://c4c4mkq16pc2o" path="res://scripts/multiplayer/clientBullet.gd" id="1_ghnpb"]
+[ext_resource type="Script" uid="uid://cgtfp40c35guy" path="res://scripts/classes/2D/trail2D.gd" id="1_pbu7h"]
+[ext_resource type="Script" uid="uid://duohyi25xigja" path="res://scripts/classes/multiplayer/authorizer.gd" id="2_h2xog"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_h2xog"]
+properties/0/path = NodePath(".:local_linearVelocity")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:local_angularVelocity")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:local_position")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:local_rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("Trail:flag_enabled")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ov8nf"]
+
+[sub_resource type="Curve" id="Curve_ghnpb"]
+_data = [Vector2(0, 1), 0.0, 0.09971545, 0, 0, Vector2(1, 0), 0.10844192, 0.0, 0, 0]
+point_count = 2
+
+[node name="Bullet" type="RigidBody2D" unique_id=1401276403 node_paths=PackedStringArray("node_synchronizer", "node_authorizer", "node_trail")]
+mass = 0.01
+can_sleep = false
+lock_rotation = true
+continuous_cd = 2
+contact_monitor = true
+max_contacts_reported = 32
+script = ExtResource("1_ghnpb")
+setting_forwardOffset = 10.0
+node_synchronizer = NodePath("Synchronizer")
+node_authorizer = NodePath("Authorizer")
+node_trail = NodePath("Trail")
+
+[node name="Authorizer" type="Node" parent="." unique_id=1102153769 node_paths=PackedStringArray("authorizeArray")]
+script = ExtResource("2_h2xog")
+authorizeArray = [NodePath(".."), NodePath("../Synchronizer")]
+metadata/_custom_type_script = "uid://duohyi25xigja"
+
+[node name="Synchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1298004149]
+replication_config = SubResource("SceneReplicationConfig_h2xog")
+
+[node name="Collider" type="CollisionShape2D" parent="." unique_id=1774219032]
+shape = SubResource("CircleShape2D_ov8nf")
+
+[node name="Trail" type="Line2D" parent="." unique_id=1085755655]
+points = PackedVector2Array(0, 0, -10, 0, -22, -1, -34, -5, -42, -12, -47, -21, -48, -29, -45, -37, -40, -41, -34, -43, -26, -43, -21, -41, -13, -37)
+width = 20.0
+width_curve = SubResource("Curve_ghnpb")
+begin_cap_mode = 2
+script = ExtResource("1_pbu7h")
+maxLength = 200.0
+maxLifetime = 0.1
+flag_updateMode = 0
+metadata/_custom_type_script = "uid://cgtfp40c35guy"
+
+[connection signal="body_entered" from="." to="." method="onBulletBodyEntered"]

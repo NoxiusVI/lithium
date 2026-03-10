@@ -1,0 +1,178 @@
+[gd_scene format=3 uid="uid://dgpy4xhk5y21t"]
+
+[ext_resource type="Script" uid="uid://dx4e17d5jkryn" path="res://scripts/spawners/playerSpawner.gd" id="1_1s05s"]
+[ext_resource type="Script" uid="uid://bcc28dvk0pufe" path="res://addons/netfox.extras/physics/rapier_driver_2d.gd" id="1_b1d4t"]
+[ext_resource type="PackedScene" uid="uid://fyfn0vdd16dh" path="res://objects/scenes/prefabs/characters/player.tscn" id="3_sa1ve"]
+[ext_resource type="Script" uid="uid://busd3yfk5p1mx" path="res://addons/godot-rapier2d/custom_nodes/rapier_static_body_2d.gd" id="4_b1d4t"]
+[ext_resource type="PackedScene" uid="uid://b5cpp0or7yjdg" path="res://objects/scenes/prefabs/weapon/shotgun.tscn" id="5_1s05s"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7tkgb"]
+size = Vector2(1024, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1s05s"]
+size = Vector2(1920, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eupl3"]
+size = Vector2(64, 1080)
+
+[sub_resource type="GDScript" id="GDScript_eupl3"]
+script/source = "extends Control
+
+# --|| VARIABLES ||--
+
+@export_group(\"Nodes\",\"node_\")
+## The Label that will display messages.
+@export var node_chatLabel : Label
+## The LineEdit that will be used to write messages.
+@export var node_chatInput : LineEdit
+
+# --|| MAIN FUNCTIONS ||--
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	LobbyManager.chatMessageReceived.connect(chatMessageReceived)
+
+# --|| LOGIC FUNCTIONS ||--
+
+func chatMessageReceived(_senderId : int, senderName : String, message : String) -> void:
+	if not node_chatLabel: return
+	node_chatLabel.text += \"[%s]: %s\\n\" % [senderName,message]
+
+func chatMessageSubmitted(message : String) -> void:
+	node_chatInput.text = \"\"
+	node_chatInput.release_focus()
+	LobbyManager.sendLobbyMessage(message)
+"
+
+[node name="Game" type="Node" unique_id=769141310]
+
+[node name="PhysicsDriver" type="Node" parent="." unique_id=836481297]
+script = ExtResource("1_b1d4t")
+metadata/_custom_type_script = "uid://bcc28dvk0pufe"
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=486221562]
+_spawnable_scenes = PackedStringArray("uid://fyfn0vdd16dh")
+spawn_path = NodePath("../Players")
+script = ExtResource("1_1s05s")
+scene_player = ExtResource("3_sa1ve")
+
+[node name="World" type="Node2D" parent="." unique_id=1061194577]
+
+[node name="Platform" type="StaticBody2D" parent="World" unique_id=287686889]
+position = Vector2(0, 180)
+script = ExtResource("4_b1d4t")
+metadata/_custom_type_script = "uid://busd3yfk5p1mx"
+
+[node name="Collider" type="CollisionShape2D" parent="World/Platform" unique_id=942626539]
+shape = SubResource("RectangleShape2D_7tkgb")
+
+[node name="Polygon" type="Polygon2D" parent="World/Platform" unique_id=1027957841]
+color = Color(0.15487596, 0.154876, 0.15487596, 1)
+polygon = PackedVector2Array(512, 32, -512, 32, -512, -32, 512, -32)
+
+[node name="Platform2" type="StaticBody2D" parent="World" unique_id=1988076998]
+position = Vector2(0, 540)
+script = ExtResource("4_b1d4t")
+metadata/_custom_type_script = "uid://busd3yfk5p1mx"
+
+[node name="Collider" type="CollisionShape2D" parent="World/Platform2" unique_id=1672276946]
+shape = SubResource("RectangleShape2D_1s05s")
+
+[node name="Polygon" type="Polygon2D" parent="World/Platform2" unique_id=1089312421]
+color = Color(0.15487596, 0.154876, 0.15487596, 1)
+polygon = PackedVector2Array(960, 32, -960, 32, -960, -32, 960, -32)
+
+[node name="Platform3" type="StaticBody2D" parent="World" unique_id=2024419396]
+position = Vector2(0, -540)
+script = ExtResource("4_b1d4t")
+metadata/_custom_type_script = "uid://busd3yfk5p1mx"
+
+[node name="Collider" type="CollisionShape2D" parent="World/Platform3" unique_id=689423921]
+shape = SubResource("RectangleShape2D_1s05s")
+
+[node name="Polygon" type="Polygon2D" parent="World/Platform3" unique_id=1488563581]
+color = Color(0.15487596, 0.154876, 0.15487596, 1)
+polygon = PackedVector2Array(960, 32, -960, 32, -960, -32, 960, -32)
+
+[node name="Platform4" type="StaticBody2D" parent="World" unique_id=728427531]
+position = Vector2(960, 0)
+script = ExtResource("4_b1d4t")
+metadata/_custom_type_script = "uid://busd3yfk5p1mx"
+
+[node name="Collider" type="CollisionShape2D" parent="World/Platform4" unique_id=1348916572]
+shape = SubResource("RectangleShape2D_eupl3")
+
+[node name="Polygon" type="Polygon2D" parent="World/Platform4" unique_id=1521530587]
+color = Color(0.15487596, 0.154876, 0.15487596, 1)
+polygon = PackedVector2Array(32, 540, -32, 540, -32, -540, 32, -540)
+
+[node name="Platform5" type="StaticBody2D" parent="World" unique_id=1878539153]
+position = Vector2(-960, 0)
+script = ExtResource("4_b1d4t")
+metadata/_custom_type_script = "uid://busd3yfk5p1mx"
+
+[node name="Collider" type="CollisionShape2D" parent="World/Platform5" unique_id=358134032]
+shape = SubResource("RectangleShape2D_eupl3")
+
+[node name="Polygon" type="Polygon2D" parent="World/Platform5" unique_id=802622026]
+color = Color(0.15487596, 0.154876, 0.15487596, 1)
+polygon = PackedVector2Array(32, 540, -32, 540, -32, -540, 32, -540)
+
+[node name="Camera2D" type="Camera2D" parent="World" unique_id=1153341456]
+
+[node name="Shotgun" parent="World" unique_id=712024441 instance=ExtResource("5_1s05s")]
+position = Vector2(-266, 99)
+
+[node name="Players" type="Node2D" parent="." unique_id=370523806]
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1977536461]
+
+[node name="ChatMenu" type="Control" parent="UI" unique_id=1292403006 node_paths=PackedStringArray("node_chatLabel", "node_chatInput")]
+custom_minimum_size = Vector2(640, 360)
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -360.0
+offset_right = 640.0
+grow_vertical = 0
+script = SubResource("GDScript_eupl3")
+node_chatLabel = NodePath("ChatContainer/Chat")
+node_chatInput = NodePath("ChatInput")
+
+[node name="ChatContainer" type="ScrollContainer" parent="UI/ChatMenu" unique_id=1950875338]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+horizontal_scroll_mode = 0
+
+[node name="Chat" type="Label" parent="UI/ChatMenu/ChatContainer" unique_id=540080903]
+custom_minimum_size = Vector2(632, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+autowrap_mode = 3
+
+[node name="ChatInput" type="LineEdit" parent="UI/ChatMenu" unique_id=1352645690]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+focus_mode = 1
+theme_override_font_sizes/font_size = 32
+placeholder_text = "START CHATTING..."
+max_length = 32
+expand_to_text_length = true
+context_menu_enabled = false
+emoji_menu_enabled = false
+middle_mouse_paste_enabled = false
+drag_and_drop_selection_enabled = false
+
+[connection signal="text_submitted" from="UI/ChatMenu/ChatInput" to="UI/ChatMenu" method="chatMessageSubmitted"]

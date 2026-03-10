@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://r2k4kb1p1o4a"]
+
+[ext_resource type="FontFile" uid="uid://3u54igffxbmy" path="res://assets/fonts/bblcpsfill.ttf" id="1_o1p51"]
+
+[resource]
+default_font = ExtResource("1_o1p51")
+default_font_size = 48

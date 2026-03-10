@@ -1,0 +1,495 @@
+[gd_scene format=3 uid="uid://bj26wgnjuf167"]
+
+[ext_resource type="Texture2D" uid="uid://cj6rsmx3c8yeb" path="res://assets/sprites/cosmetics/faces/blushyBlush.png" id="1_w4hmc"]
+[ext_resource type="Script" uid="uid://cwda8hb3rgslp" path="res://scripts/ui/localManagers/mainMenuManager.gd" id="2_7pha1"]
+[ext_resource type="Script" uid="uid://dry6kvb4fhv6x" path="res://scripts/multiplayer/mainMenuNetworker.gd" id="2_31l7g"]
+[ext_resource type="Theme" uid="uid://bpgffgw102k1g" path="res://assets/themes/startMenu.tres" id="2_uuv0l"]
+[ext_resource type="Script" uid="uid://dqrbt7duounyb" path="res://scripts/ui/menus/startMenu.gd" id="3_hkifa"]
+[ext_resource type="Theme" uid="uid://qnmd0l0is6de" path="res://assets/themes/hostMenu.tres" id="3_io244"]
+[ext_resource type="Theme" uid="uid://cxrrcd14ns62n" path="res://assets/themes/browserMenu.tres" id="4_hkifa"]
+[ext_resource type="Script" uid="uid://dffu52o4dphmq" path="res://scripts/ui/menus/hostMenu.gd" id="5_uk4em"]
+[ext_resource type="PackedScene" uid="uid://dgpy4xhk5y21t" path="res://objects/scenes/main/game.tscn" id="6_pung5"]
+[ext_resource type="Script" uid="uid://c1gx4nf7ihldj" path="res://scripts/ui/menus/browserMenu.gd" id="7_uk4em"]
+[ext_resource type="PackedScene" uid="uid://dvlgn204sx3b0" path="res://objects/scenes/prefabs/ui/lobbyBar.tscn" id="8_0tn40"]
+[ext_resource type="Script" uid="uid://boiok0titxh0j" path="res://scripts/ui/menus/errorMenu.gd" id="11_7pha1"]
+[ext_resource type="Theme" uid="uid://wkyg1a1ufin2" path="res://assets/themes/popUpMenu.tres" id="12_a8nv1"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_uuv0l"]
+polygon = PackedVector2Array(-3663, 28, -526, 40, -782, 502, 552, 501, 8609, 4571, 10869, 1489, 1193, -431, -1373, -1046, 4358, -3095, 14112, -1047, 11938, 8391, -17773, 9057, -9455, -751)
+
+[sub_resource type="Gradient" id="Gradient_uuv0l"]
+offsets = PackedFloat32Array(0, 0.1, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_io244"]
+gradient = SubResource("Gradient_uuv0l")
+width = 200
+height = 200
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="MainMenu" type="Node" unique_id=686257450]
+
+[node name="World" type="Node2D" parent="." unique_id=1561948719]
+
+[node name="Background" type="Polygon2D" parent="World" unique_id=116627254]
+color = Color(0.35156274, 0.35156295, 0.35156286, 1)
+polygon = PackedVector2Array(-1373, -1046, -1339, -461, -2294, 1631, 9139, 4816, 12333, 537)
+
+[node name="LeftCharacter" type="Node2D" parent="World" unique_id=1793807100]
+position = Vector2(-440, -190)
+scale = Vector2(2, 2)
+
+[node name="Body" type="Node2D" parent="World/LeftCharacter" unique_id=2121111986]
+rotation = 1.0803589
+
+[node name="Polygon" type="Polygon2D" parent="World/LeftCharacter/Body" unique_id=1728374978]
+scale = Vector2(1.0000001, 1.0000001)
+polygon = PackedVector2Array(-50, -50, 50, -50, 50, 50, -50, 50)
+
+[node name="Face" type="Sprite2D" parent="World/LeftCharacter/Body" unique_id=1763835167]
+texture_filter = 1
+texture = ExtResource("1_w4hmc")
+
+[node name="Weapon" type="Node2D" parent="World/LeftCharacter" unique_id=1384588143]
+rotation = 0.61086524
+
+[node name="Polygon" type="Polygon2D" parent="World/LeftCharacter/Weapon" unique_id=296522713]
+position = Vector2(75, 0)
+polygon = PackedVector2Array(0, -5, 30, -5, 30, 5, 10, 5, 10, 15, 0, 15, 0, 5)
+
+[node name="RightCharacter" type="Node2D" parent="World" unique_id=785331615]
+position = Vector2(440, 400)
+scale = Vector2(2, 2)
+
+[node name="Body" type="Node2D" parent="World/RightCharacter" unique_id=1478403165]
+rotation = 3.1415927
+
+[node name="Polygon" type="Polygon2D" parent="World/RightCharacter/Body" unique_id=1882577833]
+polygon = PackedVector2Array(-50, -50, 50, -50, 50, 50, -50, 50)
+
+[node name="Face" type="Sprite2D" parent="World/RightCharacter/Body" unique_id=755380107]
+texture_filter = 1
+texture = ExtResource("1_w4hmc")
+
+[node name="Weapon" type="Node2D" parent="World/RightCharacter" unique_id=2125722529]
+rotation = -2.3561945
+
+[node name="Polygon" type="Polygon2D" parent="World/RightCharacter/Weapon" unique_id=689051606]
+position = Vector2(75, 0)
+polygon = PackedVector2Array(0, -5, 30, -5, 30, 5, 10, 5, 10, 15, 0, 15, 0, 5)
+
+[node name="Level" type="Polygon2D" parent="World" unique_id=1360487285]
+color = Color(0.04755766, 0.047557645, 0.047557645, 1)
+polygon = PackedVector2Array(-3663, 28, -526, 40, -782, 502, 552, 501, 8609, 4571, 10869, 1489, 1193, -431, -1373, -1046, 4358, -3095, 14112, -1047, 11938, 8391, -17773, 9057, -9455, -751)
+
+[node name="Occluder" type="LightOccluder2D" parent="World/Level" unique_id=923552590]
+occluder = SubResource("OccluderPolygon2D_uuv0l")
+
+[node name="Camera" type="Camera2D" parent="World" unique_id=1349553999]
+
+[node name="WorldShadow" type="DirectionalLight2D" parent="World" unique_id=1418059470]
+position = Vector2(-2406.0002, -1194.0001)
+color = Color(0, 0, 0.06100855, 1)
+blend_mode = 2
+shadow_enabled = true
+shadow_color = Color(0, 0, 0.06100855, 1)
+shadow_filter = 1
+
+[node name="Light" type="PointLight2D" parent="World" unique_id=1683315077]
+position = Vector2(-1492, -824)
+color = Color(0.62152386, 0.62152386, 0.6215238, 1)
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_io244")
+texture_scale = 25.0
+
+[node name="Torch" type="Node2D" parent="World" unique_id=912368972]
+position = Vector2(800, 0)
+
+[node name="FirePrimary" type="Polygon2D" parent="World/Torch" unique_id=770372527]
+modulate = Color(3.2944162, 3.2944162, 3.2944162, 1)
+color = Color(1, 0.4166667, 0, 1)
+polygon = PackedVector2Array(-25.683014, 0, -52.683014, -39, -51.19928, -72.70978, -29.683014, -55, -21.146698, -79.53992, 9.588898, -122.56976, 8.2229, -83.63799, 17.316986, -51, 39.316986, -68, 49.316986, -33, 24.316986, 0)
+uv = PackedVector2Array(-25.683014, 0, -52.683014, -39, -51.683014, -91, -29.683014, -55, -21.146698, -79.53992, -10.218475, -107.543465, 14.369995, -132.13194, 8.2229, -83.63799, 17.316986, -51, 39.316986, -68, 49.316986, -33, 24.316986, 0)
+
+[node name="FireSecondary" type="Polygon2D" parent="World/Torch" unique_id=1204010935]
+modulate = Color(3.2944162, 3.2944162, 3.2944162, 1)
+color = Color(1, 0.31666666, 0, 1)
+polygon = PackedVector2Array(-16, -10, -40, -32, -45, -56, -22, -40, -12, -74, 0, -96, 3, -67, 13, -38, 36, -55, 40, -32, 20, -10)
+uv = PackedVector2Array(-25.683014, 0, -52.683014, -39, -51.683014, -91, -29.683014, -55, -21.146698, -79.53992, -10.218475, -107.543465, 14.369995, -132.13194, 8.2229, -83.63799, 17.316986, -51, 39.316986, -68, 49.316986, -33, 24.316986, 0)
+
+[node name="Handle" type="Polygon2D" parent="World/Torch" unique_id=431629469]
+color = Color(0.45975757, 0.24704021, 0.11540154, 1)
+polygon = PackedVector2Array(-25, 0, 0, 100, 25, 0)
+
+[node name="Light" type="PointLight2D" parent="World/Torch" unique_id=345749996]
+color = Color(0.75, 0.29900002, 0.135, 1)
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_io244")
+texture_scale = 20.0
+
+[node name="Networker" type="Node" parent="." unique_id=385183770]
+script = ExtResource("2_31l7g")
+scene_mainGame = ExtResource("6_pung5")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1276548640 node_paths=PackedStringArray("menu_startMenu", "menu_errorMenu")]
+script = ExtResource("2_7pha1")
+menu_startMenu = NodePath("StartMenu")
+menu_errorMenu = NodePath("ErrorMenu")
+
+[node name="StartMenu" type="Control" parent="UI" unique_id=134351089 node_paths=PackedStringArray("menu_host", "menu_lobbyBrowser", "node_openFocus")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_uuv0l")
+script = ExtResource("3_hkifa")
+menu_host = NodePath("../HostMenu")
+menu_lobbyBrowser = NodePath("../BrowserMenu")
+node_openFocus = NodePath("Host")
+metadata/_custom_type_script = "uid://cgjtykstfpy6y"
+
+[node name="Title" type="RichTextLabel" parent="UI/StartMenu" unique_id=1686618343]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.028
+anchor_right = 0.5
+anchor_bottom = 0.30600002
+offset_left = -600.0
+offset_top = -0.24000168
+offset_right = 600.0
+offset_bottom = -0.48007202
+grow_horizontal = 2
+pivot_offset = Vector2(600, 150)
+theme = ExtResource("2_uuv0l")
+theme_override_constants/outline_size = 96
+theme_override_font_sizes/bold_font_size = 128
+bbcode_enabled = true
+text = "[wave amp=100] [b]SQUARE SQUABBLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Host" type="Button" parent="UI/StartMenu" unique_id=986763561]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.6
+offset_left = -400.0
+offset_right = 400.0
+pivot_offset_ratio = Vector2(0.5, 0)
+focus_neighbor_top = NodePath("../Exit")
+focus_neighbor_bottom = NodePath("../LobbyBrowser")
+theme = ExtResource("2_uuv0l")
+theme_override_font_sizes/font_size = 48
+text = "Host"
+
+[node name="LobbyBrowser" type="Button" parent="UI/StartMenu" unique_id=1541333384]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.6
+anchor_right = 0.5
+anchor_bottom = 0.7
+offset_left = -400.0
+offset_right = 400.0
+focus_neighbor_top = NodePath("../Host")
+focus_neighbor_bottom = NodePath("../Exit")
+theme = ExtResource("2_uuv0l")
+theme_override_font_sizes/font_size = 48
+text = "Lobby Browser
+"
+
+[node name="Exit" type="Button" parent="UI/StartMenu" unique_id=322093241]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.75
+anchor_right = 0.5
+anchor_bottom = 0.85
+offset_left = -400.0
+offset_right = 400.0
+focus_neighbor_top = NodePath("../LobbyBrowser")
+focus_neighbor_bottom = NodePath("../Host")
+theme = ExtResource("2_uuv0l")
+theme_override_font_sizes/font_size = 48
+text = "Exit"
+
+[node name="HostMenu" type="Control" parent="UI" unique_id=2103307037 node_paths=PackedStringArray("node_nameInput", "node_visibilityInput", "menu_back", "node_openFocus")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_io244")
+script = ExtResource("5_uk4em")
+scene_mainScene = ExtResource("6_pung5")
+node_nameInput = NodePath("Window/NameOption")
+node_visibilityInput = NodePath("Window/VisibilityOption")
+menu_back = NodePath("../StartMenu")
+node_openFocus = NodePath("Window/Buttons/Start")
+metadata/_custom_type_script = "uid://cgjtykstfpy6y"
+
+[node name="Window" type="Control" parent="UI/HostMenu" unique_id=1593816612]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="UI/HostMenu/Window" unique_id=1631912216]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_io244")
+
+[node name="NameOption" type="LineEdit" parent="UI/HostMenu/Window" unique_id=690449585]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 760.0
+offset_bottom = 120.0
+focus_neighbor_top = NodePath("../Buttons/Start")
+focus_neighbor_bottom = NodePath("../VisibilityOption")
+theme = ExtResource("3_io244")
+placeholder_text = "LOBBY NAME"
+
+[node name="VisibilityLabel" type="Label" parent="UI/HostMenu/Window" unique_id=390058333]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 0
+offset_left = 40.0
+offset_top = 200.0
+offset_right = 640.0
+offset_bottom = 280.0
+theme = ExtResource("3_io244")
+text = "Lobby visibility:"
+vertical_alignment = 1
+
+[node name="VisibilityOption" type="OptionButton" parent="UI/HostMenu/Window" unique_id=1276640599]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 0
+offset_left = 40.0
+offset_top = 280.0
+offset_right = 340.0
+offset_bottom = 360.0
+focus_neighbor_top = NodePath("../NameOption")
+focus_neighbor_bottom = NodePath("../Buttons/Start")
+theme = ExtResource("3_io244")
+selected = 0
+item_count = 2
+popup/item_0/text = "Private"
+popup/item_0/id = 0
+popup/item_1/text = "Public"
+popup/item_1/id = 2
+
+[node name="Buttons" type="HBoxContainer" parent="UI/HostMenu/Window" unique_id=183998112]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -264.0
+offset_top = -80.0
+offset_right = 264.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("3_io244")
+
+[node name="Start" type="Button" parent="UI/HostMenu/Window/Buttons" unique_id=1384985988]
+custom_minimum_size = Vector2(200, 80)
+layout_mode = 2
+focus_neighbor_left = NodePath("../Back")
+focus_neighbor_top = NodePath("../../VisibilityOption")
+focus_neighbor_right = NodePath("../Back")
+focus_neighbor_bottom = NodePath("../../NameOption")
+theme = ExtResource("3_io244")
+theme_override_font_sizes/font_size = 48
+text = "Start"
+
+[node name="Spacer" type="Control" parent="UI/HostMenu/Window/Buttons" unique_id=1610225506]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme = ExtResource("3_io244")
+
+[node name="Back" type="Button" parent="UI/HostMenu/Window/Buttons" unique_id=678410554]
+custom_minimum_size = Vector2(200, 80)
+layout_mode = 2
+focus_neighbor_left = NodePath("../Start")
+focus_neighbor_top = NodePath("../Start")
+focus_neighbor_right = NodePath("../Start")
+focus_neighbor_bottom = NodePath("../Start")
+theme = ExtResource("3_io244")
+theme_override_font_sizes/font_size = 48
+text = "Back"
+
+[node name="BrowserMenu" type="Control" parent="UI" unique_id=276747214 node_paths=PackedStringArray("node_nameSearch", "node_lobbyHolder", "menu_back", "node_openFocus")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_hkifa")
+script = ExtResource("7_uk4em")
+prefab_lobbyBar = ExtResource("8_0tn40")
+node_nameSearch = NodePath("Window/NameSearch")
+node_lobbyHolder = NodePath("Window/Scroll/Lobbies")
+menu_back = NodePath("../StartMenu")
+node_openFocus = NodePath("Window/Back")
+metadata/_custom_type_script = "uid://cgjtykstfpy6y"
+
+[node name="Window" type="Control" parent="UI/BrowserMenu" unique_id=1646799628]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -800.0
+offset_top = -450.0
+offset_right = 800.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4_hkifa")
+
+[node name="Panel" type="Panel" parent="UI/BrowserMenu/Window" unique_id=1127710493]
+layout_mode = 1
+offset_right = 1600.0
+offset_bottom = 900.0
+theme = ExtResource("4_hkifa")
+
+[node name="NameSearch" type="LineEdit" parent="UI/BrowserMenu/Window" unique_id=364792878]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 1240.0
+offset_bottom = 120.0
+focus_neighbor_left = NodePath("../Refresh")
+focus_neighbor_top = NodePath("../Back")
+focus_neighbor_right = NodePath("../Refresh")
+focus_neighbor_bottom = NodePath("../Back")
+theme = ExtResource("4_hkifa")
+placeholder_text = "SEARCH"
+
+[node name="Scroll" type="ScrollContainer" parent="UI/BrowserMenu/Window" unique_id=202486053]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 160.0
+offset_right = 1560.0
+offset_bottom = 740.0
+follow_focus = true
+
+[node name="Lobbies" type="VBoxContainer" parent="UI/BrowserMenu/Window/Scroll" unique_id=1625640135]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Back" type="Button" parent="UI/BrowserMenu/Window" unique_id=324251345]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 780.0
+offset_right = 240.0
+offset_bottom = 860.0
+focus_neighbor_top = NodePath("../NameSearch")
+focus_neighbor_bottom = NodePath("../NameSearch")
+theme = ExtResource("4_hkifa")
+text = "BACK"
+
+[node name="Refresh" type="Button" parent="UI/BrowserMenu/Window" unique_id=1283480305]
+layout_mode = 0
+offset_left = 1260.0
+offset_top = 40.0
+offset_right = 1560.0
+offset_bottom = 120.0
+focus_neighbor_left = NodePath("../NameSearch")
+focus_neighbor_right = NodePath("../NameSearch")
+theme = ExtResource("4_hkifa")
+text = "Refresh"
+
+[node name="ErrorMenu" type="Control" parent="UI" unique_id=672585246 node_paths=PackedStringArray("menu_ok", "node_openFocus")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_7pha1")
+menu_ok = NodePath("../StartMenu")
+node_openFocus = NodePath("Window/Ok")
+metadata/_custom_type_script = "uid://cgjtykstfpy6y"
+
+[node name="Window" type="Control" parent="UI/ErrorMenu" unique_id=134344583]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -150.0
+offset_right = 300.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("12_a8nv1")
+
+[node name="Panel" type="Panel" parent="UI/ErrorMenu/Window" unique_id=1518128511]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("12_a8nv1")
+
+[node name="Label" type="Label" parent="UI/ErrorMenu/Window" unique_id=775458573]
+layout_mode = 0
+offset_right = 600.0
+offset_bottom = 220.0
+theme = ExtResource("12_a8nv1")
+text = "Error:
+Double Error: 
+Failed to load error."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Ok" type="Button" parent="UI/ErrorMenu/Window" unique_id=1622319750]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 220.0
+offset_right = 400.0
+offset_bottom = 300.0
+theme = ExtResource("12_a8nv1")
+text = "OK"
+
+[connection signal="pressed" from="UI/StartMenu/Host" to="UI/StartMenu" method="onHostPressed"]
+[connection signal="pressed" from="UI/StartMenu/LobbyBrowser" to="UI/StartMenu" method="onLobbyBrowserPressed"]
+[connection signal="pressed" from="UI/HostMenu/Window/Buttons/Start" to="UI/HostMenu" method="onStartPressed"]
+[connection signal="pressed" from="UI/HostMenu/Window/Buttons/Back" to="UI/HostMenu" method="onBackPressed"]
+[connection signal="text_submitted" from="UI/BrowserMenu/Window/NameSearch" to="UI/BrowserMenu" method="onNameSearchUpdated"]
+[connection signal="pressed" from="UI/BrowserMenu/Window/Back" to="UI/BrowserMenu" method="onBackPressed"]
+[connection signal="pressed" from="UI/BrowserMenu/Window/Refresh" to="UI/BrowserMenu" method="onRefreshPressed"]
+[connection signal="pressed" from="UI/ErrorMenu/Window/Ok" to="UI/ErrorMenu" method="onOkPressed"]

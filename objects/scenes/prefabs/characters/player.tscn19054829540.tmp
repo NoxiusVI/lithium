@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://fyfn0vdd16dh"]
+
+[ext_resource type="Script" uid="uid://duohyi25xigja" path="res://scripts/classes/multiplayer/authorizer.gd" id="1_0sf4r"]
+[ext_resource type="Texture2D" uid="uid://cj6rsmx3c8yeb" path="res://assets/sprites/cosmetics/faces/blushyBlush.png" id="1_t4xqu"]
+[ext_resource type="Script" uid="uid://cuhb52r8tr6md" path="res://scripts/networked/characterController.gd" id="1_vqnni"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_trxra"]
+[ext_resource type="Shader" uid="uid://dgpuxve60a76s" path="res://scripts/shaders/playerBody.tres" id="4_87xi7"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_f5t23"]
+[ext_resource type="Texture2D" uid="uid://bhjkmbeq4k0y6" path="res://assets/sprites/body/full.png" id="5_0sf4r"]
+[ext_resource type="Script" uid="uid://03iif312gl6g" path="res://scripts/input/playerInput.gd" id="5_87xi7"]
+[ext_resource type="Theme" uid="uid://r2k4kb1p1o4a" path="res://assets/themes/nameDisplay.tres" id="6_87xi7"]
+[ext_resource type="Script" uid="uid://cgtfp40c35guy" path="res://scripts/classes/2D/trail2D.gd" id="7_f5t23"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f5t23"]
+friction = 0.7
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_405ba"]
+size = Vector2(100, 100)
+
+[sub_resource type="Curve" id="Curve_f5t23"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0sf4r"]
+shader = ExtResource("4_87xi7")
+shader_parameter/BorderThickness = 0.050000002375
+shader_parameter/Progress = 0.6050000287375
+
+[sub_resource type="GDScript" id="GDScript_87xi7"]
+resource_name = "bulve"
+script/source = "extends Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$Label.text = get_parent().name
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	global_rotation = 0.0
+	global_position = get_parent().position - Vector2(0,100)
+"
+
+[node name="Player" type="RigidBody2D" unique_id=852572237 node_paths=PackedStringArray("node_input")]
+physics_material_override = SubResource("PhysicsMaterial_f5t23")
+can_sleep = false
+contact_monitor = true
+max_contacts_reported = 1
+script = ExtResource("1_vqnni")
+node_input = NodePath("Input")
+metadata/_custom_type_script = "uid://c8hw7ol53m55g"
+metadata/_edit_vertical_guides_ = [-547.0]
+
+[node name="Collider" type="CollisionShape2D" parent="." unique_id=2139035037]
+shape = SubResource("RectangleShape2D_405ba")
+
+[node name="Authorizer" type="Node" parent="." unique_id=602367500 node_paths=PackedStringArray("peerAuthorizeArray")]
+script = ExtResource("1_0sf4r")
+peerAuthorizeArray = [NodePath("../Input")]
+metadata/_custom_type_script = "uid://duohyi25xigja"
+
+[node name="Synchronizer" type="Node" parent="." unique_id=1538414091 node_paths=PackedStringArray("root")]
+script = ExtResource("3_trxra")
+root = NodePath("..")
+state_properties = Array[String]([":physics_state", ":jumpBufferRemaining", ":coyoteTimeRemaining", ":jumpAlreadyPressed"])
+input_properties = Array[String](["Input:movement"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="Interpolator" type="Node" parent="." unique_id=2089150886 node_paths=PackedStringArray("root")]
+script = ExtResource("4_f5t23")
+root = NodePath("..")
+properties = Array[String]([":transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="Input" type="Node" parent="." unique_id=450597450]
+process_physics_priority = -1
+script = ExtResource("5_87xi7")
+metadata/_custom_type_script = "uid://03iif312gl6g"
+
+[node name="Trail" type="Line2D" parent="." unique_id=1379824508]
+z_index = -1
+width = 50.0
+width_curve = SubResource("Curve_f5t23")
+joint_mode = 2
+begin_cap_mode = 2
+script = ExtResource("7_f5t23")
+maxLength = 200.0
+metadata/_custom_type_script = "uid://cgtfp40c35guy"
+
+[node name="Polygon" type="Polygon2D" parent="." unique_id=465660159]
+material = SubResource("ShaderMaterial_0sf4r")
+color = Color(1, 0.23000002, 0.23000002, 1)
+texture = ExtResource("5_0sf4r")
+polygon = PackedVector2Array(-50, 50, -50, -50, 50, -50, 50, 50)
+uv = PackedVector2Array(0, 100, 0, 0, 100, 0, 100, 100)
+
+[node name="Face" type="Sprite2D" parent="." unique_id=2127073642]
+texture_filter = 1
+texture = ExtResource("1_t4xqu")
+
+[node name="PlayerName" type="Node2D" parent="." unique_id=2000907857]
+position = Vector2(0, -100)
+script = SubResource("GDScript_87xi7")
+
+[node name="Label" type="Label" parent="PlayerName" unique_id=1410837025]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -50.0
+offset_right = 150.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+theme = ExtResource("6_87xi7")
+text = "PLAYER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Polygon" type="Polygon2D" parent="PlayerName" unique_id=1054019149]
+polygon = PackedVector2Array(-20, 20, 20, 20, 0, 40)

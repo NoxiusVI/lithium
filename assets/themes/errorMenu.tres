@@ -1,0 +1,64 @@
+[gd_resource type="Theme" format=3 uid="uid://wkyg1a1ufin2"]
+
+[ext_resource type="FontFile" uid="uid://3u54igffxbmy" path="res://assets/fonts/bblcpsfill.ttf" id="1_xnu8u"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ulwbl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ih520"]
+bg_color = Color(1, 1, 1, 1)
+draw_center = false
+border_width_bottom = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3iajc"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gp101"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dt5w8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_se388"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q4kbj"]
+bg_color = Color(0.15127608, 0.15127608, 0.15127605, 1)
+border_width_left = 12
+border_width_top = 12
+border_width_right = 12
+border_width_bottom = 12
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+expand_margin_left = 24.0
+expand_margin_top = 24.0
+expand_margin_right = 24.0
+expand_margin_bottom = 24.0
+
+[resource]
+default_font = ExtResource("1_xnu8u")
+default_font_size = 32
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_disabled_color = Color(0.875, 0.875, 0.875, 0.5)
+Button/colors/font_focus_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(0, 0, 0, 1)
+Button/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_outline_color = Color(0, 0, 0, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/colors/icon_disabled_color = Color(1, 1, 1, 0.4)
+Button/colors/icon_focus_color = Color(0, 0, 0, 1)
+Button/colors/icon_hover_color = Color(0, 0, 0, 1)
+Button/colors/icon_hover_pressed_color = Color(1, 1, 1, 1)
+Button/colors/icon_normal_color = Color(1, 1, 1, 1)
+Button/colors/icon_pressed_color = Color(1, 1, 1, 1)
+Button/styles/disabled = SubResource("StyleBoxEmpty_ulwbl")
+Button/styles/disabled_mirrored = SubResource("StyleBoxEmpty_ulwbl")
+Button/styles/focus = SubResource("StyleBoxFlat_ih520")
+Button/styles/hover = SubResource("StyleBoxFlat_3iajc")
+Button/styles/hover_mirrored = SubResource("StyleBoxFlat_3iajc")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_gp101")
+Button/styles/hover_pressed_mirrored = SubResource("StyleBoxFlat_gp101")
+Button/styles/normal = SubResource("StyleBoxEmpty_dt5w8")
+Button/styles/normal_mirrored = SubResource("StyleBoxEmpty_se388")
+Button/styles/pressed = SubResource("StyleBoxFlat_gp101")
+Button/styles/pressed_mirrored = SubResource("StyleBoxFlat_gp101")
+Panel/styles/panel = SubResource("StyleBoxFlat_q4kbj")

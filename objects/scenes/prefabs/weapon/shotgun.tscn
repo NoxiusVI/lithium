@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://b5cpp0or7yjdg"]
+
+[ext_resource type="Script" uid="uid://dhkwjs7d7xsw0" path="res://scripts/classes/2D/item2D.gd" id="1_0ir4w"]
+[ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_qdq80"]
+[ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_ufa01"]
+
+[node name="Shotgun" type="RigidBody2D" unique_id=591721934 node_paths=PackedStringArray("highlightObject")]
+z_index = 2
+collision_layer = 4
+mass = 0.1
+can_sleep = false
+script = ExtResource("1_0ir4w")
+highlightObject = NodePath("Outline")
+metadata/_custom_type_script = "uid://dhkwjs7d7xsw0"
+
+[node name="Synchronizer" type="Node" parent="." unique_id=1892750576 node_paths=PackedStringArray("root")]
+script = ExtResource("2_qdq80")
+root = NodePath("..")
+state_properties = Array[String]([":physics_state"])
+metadata/_custom_type_script = "uid://d350u8evihs1u"
+
+[node name="Interpolator" type="Node" parent="." unique_id=1921027566 node_paths=PackedStringArray("root")]
+script = ExtResource("3_ufa01")
+root = NodePath("..")
+properties = Array[String]([":transform"])
+metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="Collider" type="CollisionPolygon2D" parent="." unique_id=414470248]
+polygon = PackedVector2Array(-21, -12, 43, -12, 43, -6, 39, 0, -24, 17, -31, 17, -35, 12, -35, 6)
+
+[node name="Outline" type="Line2D" parent="." unique_id=77901274]
+points = PackedVector2Array(-21, -12, 43, -12, 43, -6, 35, -6, 35, -4, 39, -4, 39, 0, 32, 0, 32, 1, 31, 2, 11, 2, 10, 1, 10, 0, -8, 0, -24, 17, -31, 17, -35, 12, -35, 6, -26, -3)
+closed = true
+width = 4.0
+
+[node name="Body" type="Polygon2D" parent="." unique_id=1287712449]
+position = Vector2(-37, -6)
+color = Color(0.4, 0.4, 0.4, 1)
+polygon = PackedVector2Array(16, -6, 80, -6, 80, 0, 72, 0, 72, 2, 76, 2, 76, 6, 17, 6, 11, 3)
+
+[node name="Bolt" type="Polygon2D" parent="." unique_id=295717033]
+position = Vector2(-37, -6)
+color = Color(0.6, 0.6, 0.6, 1)
+polygon = PackedVector2Array(27, -5, 44, -5, 44, 0, 27, 0)
+
+[node name="Handle" type="Polygon2D" parent="." unique_id=1133185445]
+position = Vector2(-37, -6)
+color = Color(0.2, 0.2, 0.2, 1)
+polygon = PackedVector2Array(29, 6, 13, 23, 6, 23, 2, 18, 2, 12, 11, 3)
+
+[node name="Pump" type="Polygon2D" parent="." unique_id=1390574266]
+position = Vector2(-34, -7)
+color = Color(0.2, 0.2, 0.2, 1)
+polygon = PackedVector2Array(66, 2, 66, 8, 65, 9, 45, 9, 44, 8, 44, 2, 45, 1, 65, 1)
