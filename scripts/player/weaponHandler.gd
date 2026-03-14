@@ -24,11 +24,11 @@ var highlightedItem : Item2D
 
 # --|| MAIN FUNCTIONS ||--
 
-func _rollback_tick(_delta : float, _tick : int, _isFresh : bool) -> void:
+func _rollback_tick(_delta : float, _tick, _isFresh : bool) -> void:
 	updateArea()
 	updateHighlights()
-	pickUpItem()
-	update()
+	updateInteractions()
+	updateTorque()
 
 # --|| LOGIC FUNCTIONS ||--
 
@@ -60,7 +60,7 @@ func updateHighlights() -> void:
 	if prevCandidate:	prevCandidate.changeHighlight(false)
 	if candidate:	candidate.changeHighlight(true)
 
-func update() -> void:
+func updateTorque() -> void:
 	if not holder or not item: return
 	var targetDelta : Vector2 = (nodeInput.aimPosition - global_position)
 	var targetMagnitude : float = clamp(targetDelta.length(), 0, gripLength)
@@ -71,18 +71,19 @@ func update() -> void:
 	
 	applyTorque(item,torqueForce)
 	
-	super.update()
+	update()
 
-func pickUpItem() -> void:
+func updateInteractions() -> void:
 	if not nodeInput.isItemInteracting: return
-	if not highlightedItem and not item: return
-	if highlightedItem == item: return
-	equipItem()
+	if highlightedItem == null and item == null: return
+	itemInteraction()
 
-func equipItem() -> void:
-	if item: item.unequip()
-	if highlightedItem: highlightedItem.equip()
+func itemInteraction() -> void:
+	var prevItem : Item2D = item
 	item = highlightedItem
+	
+	if prevItem: prevItem.isEquipped = false
+	if item: item.isEquipped = true
 
 ## Adds [param node] to the pick up list.
 func addItemToPickUp(node : Node2D) -> void:

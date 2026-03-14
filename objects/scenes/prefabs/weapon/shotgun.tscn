@@ -4,19 +4,27 @@
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_qdq80"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_ufa01"]
 
-[node name="Shotgun" type="RigidBody2D" unique_id=591721934 node_paths=PackedStringArray("highlightObject")]
+[sub_resource type="CircleShape2D" id="CircleShape2D_0ir4w"]
+radius = 50.0
+
+[node name="Shotgun" type="RigidBody2D" unique_id=591721934 node_paths=PackedStringArray("nodeHighlight", "nodePickUpArea")]
 z_index = 2
 collision_layer = 4
 mass = 0.1
 can_sleep = false
 script = ExtResource("1_0ir4w")
-highlightObject = NodePath("Outline")
+springLength = 143.0
+springOffset = -43.0
+nodeHighlight = NodePath("Outline")
+nodePickUpArea = NodePath("PickUpArea")
 metadata/_custom_type_script = "uid://dhkwjs7d7xsw0"
 
-[node name="Synchronizer" type="Node" parent="." unique_id=1892750576 node_paths=PackedStringArray("root")]
+[node name="Synchronizer" type="Node" parent="." unique_id=1815259110 node_paths=PackedStringArray("root")]
 script = ExtResource("2_qdq80")
 root = NodePath("..")
-state_properties = Array[String]([":physics_state"])
+enable_prediction = true
+state_properties = Array[String]([":physics_state", ":nodeUser", ":isHighlighted"])
+full_state_interval = 1
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="Interpolator" type="Node" parent="." unique_id=1921027566 node_paths=PackedStringArray("root")]
@@ -24,6 +32,14 @@ script = ExtResource("3_ufa01")
 root = NodePath("..")
 properties = Array[String]([":transform"])
 metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="PickUpArea" type="Area2D" parent="." unique_id=1929276256]
+collision_layer = 8
+collision_mask = 2
+
+[node name="Collider" type="CollisionShape2D" parent="PickUpArea" unique_id=2021210304]
+position = Vector2(4, 2.5)
+shape = SubResource("CircleShape2D_0ir4w")
 
 [node name="Collider" type="CollisionPolygon2D" parent="." unique_id=414470248]
 polygon = PackedVector2Array(-21, -12, 43, -12, 43, -6, 39, 0, -24, 17, -31, 17, -35, 12, -35, 6)

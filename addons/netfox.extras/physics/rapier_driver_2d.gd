@@ -1,4 +1,5 @@
 extends PhysicsDriver
+
 class_name RapierDriver2D
 
 var _state: StateManager2D

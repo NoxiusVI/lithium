@@ -90,12 +90,12 @@ weapon_interact={
 2d_physics/layer_1="World"
 2d_physics/layer_2="Players"
 2d_physics/layer_3="Weapons"
+2d_physics/layer_4="Player Interactions"
 
 [netfox]
 
 autoconnect/enabled=false
 time/tickrate=60
-time/sync_to_physics=true
 rollback/history_limit=128
 rollback/input_delay=1
 
