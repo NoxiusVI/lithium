@@ -3,6 +3,11 @@
 class_name NetworkCharacter2D extends NetworkRigidBody2D
 
 # --|| VARIABLES ||--
+
+@export_group("Vitals")
+## What is the maximum HP of the player.
+@export var maxHP : int = 100
+
 @export_group("Acceleration","acceleration")
 ## What is the maximum speed possible through acceleration.
 @export var accelerationLinearCeiling : float = 1000.0
@@ -24,6 +29,12 @@ class_name NetworkCharacter2D extends NetworkRigidBody2D
 @export_group("Nodes","node")
 ## The node we get our input from.
 @export var nodeInput : PlayerInput 
+## The authorizer responsible for the character.
+@export var nodeAuthorizer : Authorizer
+## The character's weapon handler.
+@export var nodeWeaponHandler : WeaponHandler2D
+## The synchronizer responsible for the character.
+@export var nodeSynchronizer : RollbackSynchronizer
 
 ## How many ticks of jump buffering we have left.
 var jumpBufferRemaining : int = 0
@@ -32,7 +43,17 @@ var coyoteTimeRemaining : int = 0
 ## If we have already jumped. If we have, we will require the release of the jump key.
 var jumpAlreadyPressed : bool = false
 
+@onready var hpLeft : int = maxHP
+
 # --|| MAIN FUNCTIONS ||--
+
+func _ready() -> void:
+	var nodeSerializer : NodeSerializer = NodeSerializer.new()
+	NodeSerializer.scene_tree = get_tree()
+	nodeSynchronizer.set_schema({
+		"WeaponHandler:currentItem" : nodeSerializer,
+		"WeaponHandler:highlightedItem" : nodeSerializer
+	})
 
 func _rollback_tick(_delta : float, _tick : int,_isFresh : bool) -> void:
 	accelerate()

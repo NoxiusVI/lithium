@@ -1,30 +1,80 @@
 [gd_scene format=3 uid="uid://b5cpp0or7yjdg"]
 
-[ext_resource type="Script" uid="uid://dhkwjs7d7xsw0" path="res://scripts/classes/2D/item2D.gd" id="1_0ir4w"]
+[ext_resource type="Script" uid="uid://b30uuutpi6ebq" path="res://scripts/classes/items/raycastWeapon2D.gd" id="1_qdq80"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_qdq80"]
+[ext_resource type="Script" uid="uid://chr4omg2hy3yu" path="res://addons/netfox/rewindable-action.gd" id="2_ufa01"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_ufa01"]
+[ext_resource type="AudioStream" uid="uid://bg0d1rctv2u4s" path="res://assets/sounds/weapons/shotgun_shoot.mp3" id="5_ufa01"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_0ir4w"]
-radius = 50.0
+[sub_resource type="Gradient" id="Gradient_qdq80"]
+offsets = PackedFloat32Array(0, 0.9, 1)
+colors = PackedColorArray(1, 0.25, 0, 0, 1, 0.4166667, 0, 1, 1, 0.4166667, 0, 0)
 
-[node name="Shotgun" type="RigidBody2D" unique_id=591721934 node_paths=PackedStringArray("nodeHighlight", "nodePickUpArea")]
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ufa01"]
+gradient = SubResource("Gradient_qdq80")
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_0ir4w"]
+polygon = PackedVector2Array(-21, -12, 43, -12, 43, -6, 35, -6, 35, -4, 39, -4, 39, 0, 32, 0, 32, 1, 31, 2, 11, 2, 10, 1, 10, 0, -8, 0, -24, 17, -31, 17, -35, 12, -35, 6, -26, -3)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_qdq80"]
+blend_mode = 1
+light_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_nnssd"]
+offsets = PackedFloat32Array(0, 0.9, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_f82kx"]
+gradient = SubResource("Gradient_nnssd")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="Curve" id="Curve_5fnk4"]
+_data = [Vector2(0, 0), 0.0, 13.0, 0, 0, Vector2(0.2, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -3.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_vq4w0"]
+width = 32
+curve = SubResource("Curve_5fnk4")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_6bdv5"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+scale_min = 0.5
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_vq4w0")
+color = Color(1, 0.7, 0, 1)
+
+[node name="Shotgun" type="RigidBody2D" unique_id=1842884908 node_paths=PackedStringArray("muzzleFlashEmitter", "fireSound", "nodeUseAction", "nodeSynchronizer", "nodeHighlight")]
 z_index = 2
 collision_layer = 4
 mass = 0.1
 can_sleep = false
-script = ExtResource("1_0ir4w")
-springLength = 143.0
-springOffset = -43.0
+script = ExtResource("1_qdq80")
+isAutomatic = false
+pelletOffset = Vector2(43.999996, -8.999999)
+pelletCount = 4
+pelletGradient = SubResource("GradientTexture2D_ufa01")
+muzzleFlashEmitter = NodePath("MuzzleFlash")
+fireSound = NodePath("FireSound")
+nodeUseAction = NodePath("UseAction")
+springOffset = 43.0
+nodeSynchronizer = NodePath("Synchronizer")
 nodeHighlight = NodePath("Outline")
-nodePickUpArea = NodePath("PickUpArea")
-metadata/_custom_type_script = "uid://dhkwjs7d7xsw0"
+metadata/_custom_type_script = "uid://b30uuutpi6ebq"
+
+[node name="UseAction" type="Node" parent="." unique_id=1119646207]
+script = ExtResource("2_ufa01")
+metadata/_custom_type_script = "uid://chr4omg2hy3yu"
 
 [node name="Synchronizer" type="Node" parent="." unique_id=1815259110 node_paths=PackedStringArray("root")]
 script = ExtResource("2_qdq80")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":physics_state", ":nodeUser", ":isHighlighted"])
+state_properties = Array[String]([":physics_state", ":isEquipped", ":currentUser", ":cooldownTicksLeft", ":shotsLeft", ":canPerform"])
 full_state_interval = 1
+enable_input_broadcast = false
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="Interpolator" type="Node" parent="." unique_id=1921027566 node_paths=PackedStringArray("root")]
@@ -33,21 +83,21 @@ root = NodePath("..")
 properties = Array[String]([":transform"])
 metadata/_custom_type_script = "uid://dour8fehaaugp"
 
-[node name="PickUpArea" type="Area2D" parent="." unique_id=1929276256]
-collision_layer = 8
-collision_mask = 2
-
-[node name="Collider" type="CollisionShape2D" parent="PickUpArea" unique_id=2021210304]
-position = Vector2(4, 2.5)
-shape = SubResource("CircleShape2D_0ir4w")
+[node name="FireSound" type="AudioStreamPlayer2D" parent="." unique_id=624298892]
+stream = ExtResource("5_ufa01")
+max_polyphony = 10
 
 [node name="Collider" type="CollisionPolygon2D" parent="." unique_id=414470248]
 polygon = PackedVector2Array(-21, -12, 43, -12, 43, -6, 39, 0, -24, 17, -31, 17, -35, 12, -35, 6)
+
+[node name="Occluder" type="LightOccluder2D" parent="." unique_id=1411416128]
+occluder = SubResource("OccluderPolygon2D_0ir4w")
 
 [node name="Outline" type="Line2D" parent="." unique_id=77901274]
 points = PackedVector2Array(-21, -12, 43, -12, 43, -6, 35, -6, 35, -4, 39, -4, 39, 0, 32, 0, 32, 1, 31, 2, 11, 2, 10, 1, 10, 0, -8, 0, -24, 17, -31, 17, -35, 12, -35, 6, -26, -3)
 closed = true
 width = 4.0
+antialiased = true
 
 [node name="Body" type="Polygon2D" parent="." unique_id=1287712449]
 position = Vector2(-37, -6)
@@ -68,3 +118,17 @@ polygon = PackedVector2Array(29, 6, 13, 23, 6, 23, 2, 18, 2, 12, 11, 3)
 position = Vector2(-34, -7)
 color = Color(0.2, 0.2, 0.2, 1)
 polygon = PackedVector2Array(66, 2, 66, 8, 65, 9, 45, 9, 44, 8, 44, 2, 45, 1, 65, 1)
+
+[node name="MuzzleFlash" type="GPUParticles2D" parent="." unique_id=1155257071]
+material = SubResource("CanvasItemMaterial_qdq80")
+position = Vector2(44, -9)
+emitting = false
+amount = 2
+texture = SubResource("GradientTexture2D_f82kx")
+lifetime = 0.2
+one_shot = true
+explosiveness = 1.0
+use_fixed_seed = true
+seed = 6
+fixed_fps = 0
+process_material = SubResource("ParticleProcessMaterial_6bdv5")

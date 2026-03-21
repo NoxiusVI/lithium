@@ -21,6 +21,7 @@ func assignAuthority(id : int) -> void:
 	peerId = id
 	for node : Node in peerAuthorizeArray:
 		node.set_multiplayer_authority(id)
+		if node is RollbackSynchronizer: node.process_settings()
 	
 	for node : Node in serverAuthorizeArray:
 		node.set_multiplayer_authority(1)

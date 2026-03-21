@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://bj26wgnjuf167"]
 
-[ext_resource type="Shader" uid="uid://dgpuxve60a76s" path="res://scripts/shaders/playerBody.tres" id="1_js7j2"]
 [ext_resource type="Texture2D" uid="uid://cj6rsmx3c8yeb" path="res://assets/sprites/cosmetics/faces/blushyBlush.png" id="1_w4hmc"]
 [ext_resource type="Script" uid="uid://cwda8hb3rgslp" path="res://scripts/ui/localManagers/mainMenuManager.gd" id="2_7pha1"]
 [ext_resource type="Script" uid="uid://dry6kvb4fhv6x" path="res://scripts/multiplayer/mainMenuNetworker.gd" id="2_31l7g"]
@@ -16,19 +15,9 @@
 [ext_resource type="Script" uid="uid://boiok0titxh0j" path="res://scripts/ui/menus/errorMenu.gd" id="11_7pha1"]
 [ext_resource type="Theme" uid="uid://wkyg1a1ufin2" path="res://assets/themes/errorMenu.tres" id="12_a8nv1"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qa432"]
-shader = ExtResource("1_js7j2")
-shader_parameter/BorderThickness = 0.050000002375
-shader_parameter/Progress = 0.42000001995
-
 [sub_resource type="Curve" id="Curve_js7j2"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_b531e"]
-shader = ExtResource("1_js7j2")
-shader_parameter/BorderThickness = 0.050000002375
-shader_parameter/Progress = 0.690000032775
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_uuv0l"]
 polygon = PackedVector2Array(-3663, 28, -526, 40, -782, 502, 945, 501, 8609, 4571, 10869, 1489, 1193, -431, -1373, -1046, -2086, -3373, 4358, -3095, 14112, -1047, 11938, 8391, -17773, 9057, -9455, -751)
@@ -62,7 +51,6 @@ rotation = 1.0803589
 
 [node name="Polygon" type="Polygon2D" parent="World/LeftCharacter/Body" unique_id=1728374978]
 texture_filter = 1
-material = SubResource("ShaderMaterial_qa432")
 scale = Vector2(1.0000001, 1.0000001)
 color = Color(0.46199757, 0.9999998, 0.42633358, 1)
 texture = ExtResource("2_el6iw")
@@ -97,7 +85,6 @@ rotation = -1.3089969
 
 [node name="Polygon" type="Polygon2D" parent="World/RightCharacter/Body" unique_id=1620493384]
 texture_filter = 1
-material = SubResource("ShaderMaterial_b531e")
 scale = Vector2(1.0000001, 1.0000001)
 color = Color(0.42572975, 0.6065409, 1, 1)
 texture = ExtResource("2_el6iw")
@@ -124,7 +111,7 @@ joint_mode = 2
 begin_cap_mode = 2
 
 [node name="Level" type="Polygon2D" parent="World" unique_id=1360487285]
-color = Color(0.04755766, 0.047557645, 0.047557645, 1)
+color = Color(0.05, 0.05, 0.05, 0.99215686)
 polygon = PackedVector2Array(-3663, 28, -526, 40, -782, 502, 945, 501, 8609, 4571, 10869, 1489, 1193, -431, -1373, -1046, -2086, -3373, 4358, -3095, 14112, -1047, 11938, 8391, -17773, 9057, -9455, -751)
 
 [node name="Occluder" type="LightOccluder2D" parent="World/Level" unique_id=923552590]

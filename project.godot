@@ -46,6 +46,10 @@ window/vsync/vsync_mode=0
 
 enabled=PackedStringArray("res://addons/netfox.extras/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox/plugin.cfg")
 
+[global_group]
+
+player=""
+
 [input]
 
 move_left={
@@ -97,7 +101,7 @@ weapon_interact={
 autoconnect/enabled=false
 time/tickrate=60
 rollback/history_limit=128
-rollback/input_delay=1
+rollback/input_delay=3
 
 [physics]
 
@@ -117,6 +121,7 @@ rapier/solver/contact_natural_frequency=50.0
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+2d/shadow_atlas/size=8192
 
 [steam]
 

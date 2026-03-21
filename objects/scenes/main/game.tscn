@@ -6,14 +6,151 @@
 [ext_resource type="Script" uid="uid://busd3yfk5p1mx" path="res://addons/godot-rapier2d/custom_nodes/rapier_static_body_2d.gd" id="4_b1d4t"]
 [ext_resource type="PackedScene" uid="uid://b5cpp0or7yjdg" path="res://objects/scenes/prefabs/weapon/shotgun.tscn" id="5_1s05s"]
 
+[sub_resource type="Gradient" id="Gradient_sa1ve"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1s05s"]
+gradient = SubResource("Gradient_sa1ve")
+width = 200
+height = 200
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7tkgb"]
 size = Vector2(1024, 64)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_sa1ve"]
+polygon = PackedVector2Array(-512, -32, 512, -32, 512, 32, -194.6643, 32, -512, 32)
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_sa1ve"]
+input_name = "screen_pixel_size"
+
+[sub_resource type="VisualShaderNodeVectorDecompose" id="VisualShaderNodeVectorDecompose_1s05s"]
+default_input_values = [0, Vector2(0, 0)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_7tkgb"]
+output_port_for_preview = 0
+operator = 3
+
+[sub_resource type="VisualShaderNodeVectorCompose" id="VisualShaderNodeVectorCompose_wwfgs"]
+default_input_values = [0, 1.0, 1, 1.0, 2, 0.0]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_5jtb2"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+operator = 2
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_ioof6"]
+input_name = "time"
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_fvuv3"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeFloatFunc" id="VisualShaderNodeFloatFunc_6qb40"]
+function = 17
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_75faq"]
+default_input_values = [0, 0.0, 1, 0.1]
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorDecompose" id="VisualShaderNodeVectorDecompose_h4j5x"]
+default_input_values = [0, Quaternion(0, 0, 0, 0)]
+op_type = 2
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_xjlgf"]
+parameter_name = "Gradient"
+texture_type = 1
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_morbi"]
+source = 5
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_e1myh"]
+parameter_name = "Noise"
+texture_filter = 2
+texture_repeat = 1
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_7volg"]
+output_port_for_preview = 0
+source = 5
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_b1lii"]
+input_name = "screen_uv"
+
+[sub_resource type="VisualShader" id="VisualShader_7tkgb"]
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2(2100, 620)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture2DParameter_e1myh")
+nodes/fragment/5/position = Vector2(-60, 760)
+nodes/fragment/6/node = SubResource("VisualShaderNodeTexture_7volg")
+nodes/fragment/6/position = Vector2(660, 460)
+nodes/fragment/7/node = SubResource("VisualShaderNodeInput_b1lii")
+nodes/fragment/7/position = Vector2(-380, -60)
+nodes/fragment/21/node = SubResource("VisualShaderNodeInput_sa1ve")
+nodes/fragment/21/position = Vector2(-1060, 100)
+nodes/fragment/22/node = SubResource("VisualShaderNodeVectorDecompose_1s05s")
+nodes/fragment/22/position = Vector2(-700, 60)
+nodes/fragment/23/node = SubResource("VisualShaderNodeFloatOp_7tkgb")
+nodes/fragment/23/position = Vector2(-420, 60)
+nodes/fragment/24/node = SubResource("VisualShaderNodeVectorCompose_wwfgs")
+nodes/fragment/24/position = Vector2(-120, 120)
+nodes/fragment/25/node = SubResource("VisualShaderNodeVectorOp_5jtb2")
+nodes/fragment/25/position = Vector2(160, 100)
+nodes/fragment/26/node = SubResource("VisualShaderNodeInput_ioof6")
+nodes/fragment/26/position = Vector2(-540, 460)
+nodes/fragment/27/node = SubResource("VisualShaderNodeVectorOp_fvuv3")
+nodes/fragment/27/position = Vector2(360, 340)
+nodes/fragment/28/node = SubResource("VisualShaderNodeFloatFunc_6qb40")
+nodes/fragment/28/position = Vector2(100, 480)
+nodes/fragment/29/node = SubResource("VisualShaderNodeFloatOp_75faq")
+nodes/fragment/29/position = Vector2(-120, 460)
+nodes/fragment/30/node = SubResource("VisualShaderNodeVectorDecompose_h4j5x")
+nodes/fragment/30/position = Vector2(960, 480)
+nodes/fragment/36/node = SubResource("VisualShaderNodeTexture2DParameter_xjlgf")
+nodes/fragment/36/position = Vector2(1180, 780)
+nodes/fragment/37/node = SubResource("VisualShaderNodeTexture_morbi")
+nodes/fragment/37/position = Vector2(1680, 440)
+nodes/fragment/connections = PackedInt32Array(5, 0, 6, 2, 21, 0, 22, 0, 7, 0, 25, 0, 24, 0, 25, 1, 23, 0, 24, 0, 22, 1, 23, 0, 22, 0, 23, 1, 25, 0, 27, 0, 27, 0, 6, 0, 28, 0, 27, 1, 26, 0, 29, 0, 29, 0, 28, 0, 6, 0, 30, 0, 36, 0, 37, 2, 37, 0, 0, 0, 30, 0, 37, 0)
+
+[sub_resource type="Gradient" id="Gradient_tluxr"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0.25, 0.125, 0.1270833, 1, 0.25, 0.20416667, 0.125, 1, 0.125, 0.17499998, 0.25, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fbpxs"]
+gradient = SubResource("Gradient_tluxr")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_qbbtc"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_a1tvi"]
+width = 1024
+height = 1024
+noise = SubResource("FastNoiseLite_qbbtc")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bdwun"]
+shader = SubResource("VisualShader_7tkgb")
+shader_parameter/Noise = SubResource("NoiseTexture2D_a1tvi")
+shader_parameter/Gradient = SubResource("GradientTexture1D_fbpxs")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1s05s"]
 size = Vector2(1920, 64)
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_1s05s"]
+polygon = PackedVector2Array(960, 32, -960, 32, -960, -32, 960, -32)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eupl3"]
 size = Vector2(64, 1080)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_7tkgb"]
+polygon = PackedVector2Array(32, 540, -32, 540, -32, -540, 32, -540)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wwfgs"]
+shader = SubResource("VisualShader_7tkgb")
+shader_parameter/Gradient = SubResource("GradientTexture1D_fbpxs")
 
 [sub_resource type="GDScript" id="GDScript_eupl3"]
 script/source = "extends Control
@@ -44,6 +181,30 @@ func chatMessageSubmitted(message : String) -> void:
 	LobbyManager.sendLobbyMessage(message)
 "
 
+[sub_resource type="Curve" id="Curve_sa1ve"]
+_data = [Vector2(0, 0.8), 0.0, 0.0, 0, 0, Vector2(0.2, 0.2), -5.9472136, 4.95601, 0, 0, Vector2(0.6, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -6.595296, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Gradient_1s05s"]
+colors = PackedColorArray(1, 0, 0.016666412, 1, 1, 0.18, 0.19366646, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_7tkgb"]
+gradient = SubResource("Gradient_1s05s")
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
+[sub_resource type="Gradient" id="Gradient_wwfgs"]
+offsets = PackedFloat32Array(0, 0.95028406, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_5jtb2"]
+gradient = SubResource("Gradient_wwfgs")
+width = 100
+height = 100
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
 [node name="Game" type="Node" unique_id=769141310]
 
 [node name="PhysicsDriver" type="Node" parent="." unique_id=836481297]
@@ -56,6 +217,55 @@ spawn_path = NodePath("../Players")
 script = ExtResource("1_1s05s")
 scene_player = ExtResource("3_sa1ve")
 
+[node name="DirectionalLight2D" type="DirectionalLight2D" parent="." unique_id=1660424020]
+blend_mode = 2
+shadow_color = Color(0, 0.19733332, 0.37, 1)
+
+[node name="Polygon2D" type="Polygon2D" parent="DirectionalLight2D" unique_id=935364573]
+color = Color(0.099985994, 0.099985994, 0.099985994, 1)
+polygon = PackedVector2Array(-23604, -15661, 33725, -16632, 26757, 20764, -31542, 18736)
+
+[node name="PointLight2D" type="PointLight2D" parent="DirectionalLight2D" unique_id=825041421]
+position = Vector2(-1000, -600)
+color = Color(1, 0.33333337, 0, 1)
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_1s05s")
+texture_scale = 50.0
+
+[node name="PointLight2D2" type="PointLight2D" parent="DirectionalLight2D" unique_id=979971151]
+position = Vector2(0, -600)
+color = Color(0, 0.9166665, 1, 1)
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_1s05s")
+texture_scale = 50.0
+
+[node name="PointLight2D3" type="PointLight2D" parent="DirectionalLight2D" unique_id=467000067]
+position = Vector2(1000, -600)
+color = Color(1, 0, 0.5, 1)
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_1s05s")
+texture_scale = 50.0
+
+[node name="Players" type="Node2D" parent="." unique_id=370523806]
+
+[node name="Weapons" type="Node2D" parent="." unique_id=640030840]
+
+[node name="Shotgun" parent="Weapons" unique_id=1842884908 instance=ExtResource("5_1s05s")]
+position = Vector2(-290, 92)
+rotation = -0.7853982
+
+[node name="Shotgun2" parent="Weapons" unique_id=1155330424 instance=ExtResource("5_1s05s")]
+position = Vector2(335, 66)
+rotation = -2.6179938
+
+[node name="Shotgun3" parent="Weapons" unique_id=538421217 instance=ExtResource("5_1s05s")]
+position = Vector2(309, -429)
+rotation = -0.2617994
+
+[node name="Shotgun4" parent="Weapons" unique_id=1943995955 instance=ExtResource("5_1s05s")]
+position = Vector2(-280, -467)
+rotation = 1.0471976
+
 [node name="World" type="Node2D" parent="." unique_id=1061194577]
 
 [node name="Platform" type="StaticBody2D" parent="World" unique_id=287686889]
@@ -66,8 +276,12 @@ metadata/_custom_type_script = "uid://busd3yfk5p1mx"
 [node name="Collider" type="CollisionShape2D" parent="World/Platform" unique_id=942626539]
 shape = SubResource("RectangleShape2D_7tkgb")
 
+[node name="LightOccluder2D" type="LightOccluder2D" parent="World/Platform" unique_id=2119159008]
+occluder = SubResource("OccluderPolygon2D_sa1ve")
+
 [node name="Polygon" type="Polygon2D" parent="World/Platform" unique_id=1027957841]
-color = Color(0.15487596, 0.154876, 0.15487596, 1)
+material = SubResource("ShaderMaterial_bdwun")
+color = Color(0, 0, 0.05882353, 1)
 polygon = PackedVector2Array(512, 32, -512, 32, -512, -32, 512, -32)
 
 [node name="Platform2" type="StaticBody2D" parent="World" unique_id=1988076998]
@@ -78,20 +292,12 @@ metadata/_custom_type_script = "uid://busd3yfk5p1mx"
 [node name="Collider" type="CollisionShape2D" parent="World/Platform2" unique_id=1672276946]
 shape = SubResource("RectangleShape2D_1s05s")
 
+[node name="LightOccluder2D2" type="LightOccluder2D" parent="World/Platform2" unique_id=1834338790]
+occluder = SubResource("OccluderPolygon2D_1s05s")
+
 [node name="Polygon" type="Polygon2D" parent="World/Platform2" unique_id=1089312421]
-color = Color(0.15487596, 0.154876, 0.15487596, 1)
-polygon = PackedVector2Array(960, 32, -960, 32, -960, -32, 960, -32)
-
-[node name="Platform3" type="StaticBody2D" parent="World" unique_id=2024419396]
-position = Vector2(0, -540)
-script = ExtResource("4_b1d4t")
-metadata/_custom_type_script = "uid://busd3yfk5p1mx"
-
-[node name="Collider" type="CollisionShape2D" parent="World/Platform3" unique_id=689423921]
-shape = SubResource("RectangleShape2D_1s05s")
-
-[node name="Polygon" type="Polygon2D" parent="World/Platform3" unique_id=1488563581]
-color = Color(0.15487596, 0.154876, 0.15487596, 1)
+material = SubResource("ShaderMaterial_bdwun")
+color = Color(0, 0, 0.05882353, 1)
 polygon = PackedVector2Array(960, 32, -960, 32, -960, -32, 960, -32)
 
 [node name="Platform4" type="StaticBody2D" parent="World" unique_id=728427531]
@@ -102,8 +308,12 @@ metadata/_custom_type_script = "uid://busd3yfk5p1mx"
 [node name="Collider" type="CollisionShape2D" parent="World/Platform4" unique_id=1348916572]
 shape = SubResource("RectangleShape2D_eupl3")
 
+[node name="LightOccluder2D2" type="LightOccluder2D" parent="World/Platform4" unique_id=2139396519]
+occluder = SubResource("OccluderPolygon2D_7tkgb")
+
 [node name="Polygon" type="Polygon2D" parent="World/Platform4" unique_id=1521530587]
-color = Color(0.15487596, 0.154876, 0.15487596, 1)
+material = SubResource("ShaderMaterial_bdwun")
+color = Color(0, 0, 0.05882353, 1)
 polygon = PackedVector2Array(32, 540, -32, 540, -32, -540, 32, -540)
 
 [node name="Platform5" type="StaticBody2D" parent="World" unique_id=1878539153]
@@ -114,16 +324,21 @@ metadata/_custom_type_script = "uid://busd3yfk5p1mx"
 [node name="Collider" type="CollisionShape2D" parent="World/Platform5" unique_id=358134032]
 shape = SubResource("RectangleShape2D_eupl3")
 
+[node name="LightOccluder2D2" type="LightOccluder2D" parent="World/Platform5" unique_id=378109440]
+occluder = SubResource("OccluderPolygon2D_7tkgb")
+
 [node name="Polygon" type="Polygon2D" parent="World/Platform5" unique_id=802622026]
-color = Color(0.15487596, 0.154876, 0.15487596, 1)
+material = SubResource("ShaderMaterial_bdwun")
+color = Color(0, 0, 0.05882353, 1)
 polygon = PackedVector2Array(32, 540, -32, 540, -32, -540, 32, -540)
 
 [node name="Camera2D" type="Camera2D" parent="World" unique_id=1153341456]
 
-[node name="Players" type="Node2D" parent="." unique_id=370523806]
-
-[node name="Shotgun" parent="Players" unique_id=712024441 instance=ExtResource("5_1s05s")]
-position = Vector2(-266, 99)
+[node name="Polygon2D" type="Polygon2D" parent="World" unique_id=1065560371]
+material = SubResource("ShaderMaterial_wwfgs")
+position = Vector2(988.72363, -3056.4517)
+polygon = PackedVector2Array(0, 0, 512, 0, 512, 512, 0, 512)
+uv = PackedVector2Array(0, 0, 512, 0, 512, 512, 0, 512)
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1977536461]
 
@@ -174,5 +389,30 @@ context_menu_enabled = false
 emoji_menu_enabled = false
 middle_mouse_paste_enabled = false
 drag_and_drop_selection_enabled = false
+
+[node name="Line2D" type="Line2D" parent="." unique_id=2143631102]
+position = Vector2(185.04376, -157.04816)
+points = PackedVector2Array(0, 0, 20, 0, 40, 0, 60, 0, 80, 0, 100, 0)
+width = 30.0
+width_curve = SubResource("Curve_sa1ve")
+texture = SubResource("GradientTexture2D_7tkgb")
+texture_mode = 2
+joint_mode = 2
+
+[node name="Line2D2" type="Line2D" parent="Line2D" unique_id=307868081]
+show_behind_parent = true
+points = PackedVector2Array(-0.043762207, -11.951843, 19.956238, -2.9518433, 39.956238, -12.951843, 59.956238, -14.951843, 79.95624, -11.951843, 99.95624, 0.04815674, 79.95624, 12.048157, 59.956238, 15.048157, 39.956238, 13.048157, 19.956238, 3.0481567, -0.043762207, 12.048157)
+closed = true
+width = 4.0
+
+[node name="Sprite2D" type="Sprite2D" parent="Line2D/Line2D2" unique_id=1286852684]
+position = Vector2(79.95624, 0.04815674)
+scale = Vector2(0.08, 0.08)
+texture = SubResource("GradientTexture2D_5jtb2")
+
+[node name="Sprite2D" type="Sprite2D" parent="Line2D" unique_id=1126290353]
+position = Vector2(79.95624, 0.04815674)
+scale = Vector2(0.08, 0.08)
+texture = SubResource("GradientTexture2D_5jtb2")
 
 [connection signal="text_submitted" from="UI/ChatMenu/ChatInput" to="UI/ChatMenu" method="chatMessageSubmitted"]

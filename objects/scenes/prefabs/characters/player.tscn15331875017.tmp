@@ -9,8 +9,102 @@
 [ext_resource type="Texture2D" uid="uid://bhjkmbeq4k0y6" path="res://assets/sprites/body/full.png" id="5_0sf4r"]
 [ext_resource type="Script" uid="uid://03iif312gl6g" path="res://scripts/classes/input/playerInput.gd" id="5_87xi7"]
 [ext_resource type="Theme" uid="uid://r2k4kb1p1o4a" path="res://assets/themes/nameDisplay.tres" id="6_87xi7"]
-[ext_resource type="Script" uid="uid://c1704or08bx7g" path="res://scripts/classes/2D/weaponHandler2D.gd" id="6_b8a5l"]
 [ext_resource type="Script" uid="uid://cgtfp40c35guy" path="res://scripts/classes/2D/trail2D.gd" id="7_f5t23"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_b8a5l"]
+
+[sub_resource type="GDScript" id="GDScript_f5t23"]
+resource_name = "WeaponHandler"
+script/source = "extends Area2D
+
+# --|| VARIABLES ||--
+
+@export_group(\"Spring\",\"spring\")
+## How far away should the item be held.
+@export var springLength : float = 100.0
+## How much should the item be offset along hold length.
+@export var springOffset : float = 0.0
+## The stifness of the spring for linear forces.
+@export var springLinearStiffness : float = 16.0
+## The damping of the spring for linear forces.
+@export var springLinearDamping : float = 1.0
+## The stifness of the spring for angular forces.
+@export var springAngularStiffness : float = 24000.0
+## The damping of the spring for angular forces.
+@export var springAngularDamping : float = 600.0
+
+@export_group(\"Nodes\",\"node\")
+## The player character the weapon handler belongs to.
+@export var nodeUser : NetworkCharacter2D
+## The current item we are holding.
+@export var currentItem : Item2D
+
+# --|| MAIN FUNCTIONS ||--
+
+func _rollback_tick(_delta : float, _tick : int, _isFresh : bool) -> void:
+	updatePickUp()
+	updatePhysics()
+
+# --|| LOGIC FUNCTIONS ||--
+
+func updatePickUp() -> void:
+	if not nodeUser.nodeInput.isItemInteracting: return
+	
+	var selectedItem : Item2D
+	var currentDistance : float = INF
+	
+	for item : Node2D in get_overlapping_bodies():
+		if not (item is Item2D): continue
+		if item.isEquipped: continue
+		var distanceBetween : float = global_position.distance_squared_to(item.global_position)
+		if distanceBetween > currentDistance: continue
+		selectedItem = item
+		currentDistance = distanceBetween
+	
+	currentItem = selectedItem
+
+func updatePhysics() -> void:
+	if not currentItem: return
+	var displacement : Vector3 = getDisplacement()
+	var positionDisplacement : Vector2 = Vector2(displacement.x,displacement.y)
+	var rotationDisplacement : float = displacement.z
+	
+	var force : Vector2 = springLinearStiffness * positionDisplacement - springLinearDamping * currentItem.linear_velocity
+	var torque : float = -springAngularStiffness * rotationDisplacement - springAngularDamping * currentItem.angular_velocity
+	
+	applyTorque(currentItem,torque)
+	applyCentralForce(currentItem, force)
+	applyCentralForce(nodeUser, -force)
+
+# --|| HELPER FUNCTIONS ||--
+
+## Applies torque equal to [param value] to a specified physics body by [param body]
+func applyTorque(body : PhysicsBody2D,value : float) -> void:
+	if body is not RigidBody2D: return
+	body.apply_torque(value)
+
+## Applies a central force equal to [param force] to the physics body specified by [param body].
+func applyCentralForce(body : PhysicsBody2D, force : Vector2) -> void:
+	if body is not RigidBody2D: return
+	body.apply_central_force(force)
+
+## Returns the displacement value used by the spring-like simulation.
+func getDisplacement() -> Vector3:
+	var userInput : PlayerInput = nodeUser.nodeInput
+	
+	var targetDirection : Vector2 = userInput.aimPosition - nodeUser.global_position
+	
+	var tDirectionLength : float = clamp(targetDirection.length(),0,springLength) + springOffset
+	var targetPosition : Vector2 = nodeUser.global_position + targetDirection.normalized()*tDirectionLength
+	var positionDisplacement : Vector2 = targetPosition - currentItem.global_position
+	
+	var targetRot : float = atan2(targetDirection.y,targetDirection.x)
+	var currentRot : float = currentItem.global_rotation
+	
+	var rotationDisplacement : float = angle_difference(targetRot,currentRot)
+	
+	return Vector3(positionDisplacement.x,positionDisplacement.y,rotationDisplacement)
+"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_b8a5l"]
 radius = 75.0
@@ -43,20 +137,19 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	global_rotation = 0.0
-	global_position = get_parent().global_position - Vector2(0,100)
+	global_position = get_parent().position - Vector2(0,100)
 "
 
-[node name="Player" type="RigidBody2D" unique_id=2067293658 node_paths=PackedStringArray("nodeInput", "nodeAuthorizer", "nodeWeaponHandler", "nodeSynchronizer") groups=["player"]]
+[node name="Player" type="RigidBody2D" unique_id=2067293658 node_paths=PackedStringArray("nodeInput", "nodeWeaponHandler") groups=["player"]]
 z_index = 1
 collision_layer = 2
+physics_material_override = SubResource("PhysicsMaterial_b8a5l")
 can_sleep = false
 contact_monitor = true
 max_contacts_reported = 1
 script = ExtResource("1_vqnni")
 nodeInput = NodePath("Input")
-nodeAuthorizer = NodePath("Authorizer")
 nodeWeaponHandler = NodePath("WeaponHandler")
-nodeSynchronizer = NodePath("Synchronizer")
 metadata/_custom_type_script = "uid://cuhb52r8tr6md"
 metadata/_edit_vertical_guides_ = [-547.0]
 
@@ -70,9 +163,8 @@ metadata/_custom_type_script = "uid://duohyi25xigja"
 script = ExtResource("3_trxra")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":physics_state", ":jumpBufferRemaining", ":coyoteTimeRemaining", ":jumpAlreadyPressed", "WeaponHandler:currentItem", "WeaponHandler:highlightedItem", "WeaponHandler:interactTicksLeft", "WeaponHandler:attackTicksLeft"])
+state_properties = Array[String]([":physics_state", ":jumpBufferRemaining", ":coyoteTimeRemaining", ":jumpAlreadyPressed", "WeaponHandler:currentItem"])
 input_properties = Array[String](["Input:movement", "Input:aimPosition", "Input:isAttacking", "Input:isItemInteracting"])
-enable_input_broadcast = false
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="Interpolator" type="Node" parent="." unique_id=2089150886 node_paths=PackedStringArray("root")]
@@ -86,12 +178,11 @@ process_physics_priority = -1
 script = ExtResource("5_87xi7")
 metadata/_custom_type_script = "uid://03iif312gl6g"
 
-[node name="WeaponHandler" type="Area2D" parent="." unique_id=977498853 node_paths=PackedStringArray("nodeInput")]
+[node name="WeaponHandler" type="Area2D" parent="." unique_id=1785861686 node_paths=PackedStringArray("nodeUser")]
 collision_layer = 8
 collision_mask = 4
-script = ExtResource("6_b8a5l")
-nodeInput = NodePath("../Input")
-metadata/_custom_type_script = "uid://c1704or08bx7g"
+script = SubResource("GDScript_f5t23")
+nodeUser = NodePath("..")
 
 [node name="Collider" type="CollisionShape2D" parent="WeaponHandler" unique_id=852939536]
 shape = SubResource("CircleShape2D_b8a5l")
@@ -104,6 +195,7 @@ occluder = SubResource("OccluderPolygon2D_b8a5l")
 
 [node name="Trail" type="Line2D" parent="." unique_id=1379824508]
 position = Vector2(-2, -10)
+points = PackedVector2Array(2, 10, -67.28015, -29.525223, -154, -79)
 width = 50.0
 width_curve = SubResource("Curve_f5t23")
 joint_mode = 2

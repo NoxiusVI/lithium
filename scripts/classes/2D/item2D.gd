@@ -2,70 +2,69 @@
 
 class_name Item2D extends NetworkRigidBody2D
 
-# --|| SIGNALS ||--
-
-## Signal called when the item gets used by a player.
-signal used
-## Signal called when the item gets equipped by a player.
-signal equipped
-## Signal called when the item is unequipped by a player.
-signal unequipped
-
 # --|| VARIABLES ||--
 
-@export_group("Spring","spring")
-## How far away should the item be held.
-@export var springLength : float = 100.0
-## How much should the item be offset along hold length.
+@export_group("Grip")
+## The amount to offset the spring by.
 @export var springOffset : float = 0.0
-## The stifness of the spring for linear forces.
-@export var springLinearStiffness : float = 16.0
-## The damping of the spring for linear forces.
-@export var springLinearDamping : float = 1.0
-## The stifness of the spring for angular forces.
-@export var springAngularStiffness : float = 24000.0
-## The damping of the spring for angular forces.
-@export var springAngularDamping : float = 600.0
 
 @export_group("Nodes","node")
+## The synchronizer responsible for this node.
+@export var nodeSynchronizer : RollbackSynchronizer
 ## The object that is enabled to highlight the item.
 @export var nodeHighlight : Node2D
-## The object responsible for detecting players.
-@export var nodePickUpArea : Area2D
-## The character that currently has this weapon equipped.
-@export var nodeUser : NetworkCharacter2D
 
+## A bool telling us if this item is equipped.
+var isEquipped : bool = false
 ## A bool telling us if this item is highlighted.
 var isHighlighted : bool = false
+## The current user of this item.
+var currentUser : NetworkCharacter2D
 
 # --|| MAIN FUNCTIONS ||--
 
 func _ready() -> void:
 	nodeHighlight.visible = isHighlighted
-	var newSchema : NodeSerializer = NodeSerializer.new()
-	newSchema.scene_tree = get_tree()
-	$Synchronizer.set_schema({
-		":nodeUser" : newSchema
+	NodeSerializer.scene_tree = get_tree()
+	nodeSynchronizer.set_schema({
+		":currentUser" : NodeSerializer.new()
 	})
 
 func _rollback_tick(_delta : float, _tick : int, _isFresh : bool) -> void:
-	updateInteraction()
-	changeHighlight(nodePickUpArea.get_overlapping_bodies().size() > 0 and not nodeUser)
+	updateIsEquipped()
 	updatePhysics()
 
 # --|| LOGIC FUNCTIONS ||--
 
-func updateInteraction() -> void:
-	if nodeUser:
-		if not nodeUser.nodeInput.isItemInteracting: return
-		unequip()
-	else:
-		for body : PhysicsBody2D in nodePickUpArea.get_overlapping_bodies():
-			if nodeUser: return
-			equip(body)
+func updateIsEquipped() -> void:
+	var players : Array[Node] = get_tree().get_nodes_in_group("player")
+	
+	isEquipped = false
+	currentUser = null
+	
+	for player : Node in players:
+		if not (player is NetworkCharacter2D): continue
+		var playerItem : Item2D = player.nodeWeaponHandler.currentItem
+		if playerItem != self: continue
+		
+		currentUser = player
+		isEquipped = true
+		return
+
+## Call this function when you want to change the state of the highlight
+func changeHighlight(value : bool) -> void:
+	isHighlighted = value
+	nodeHighlight.visible = value
 
 func updatePhysics() -> void:
-	if not nodeUser: return
+	if not currentUser: return
+	if not currentUser.nodeWeaponHandler: return
+	
+	var springLinearStiffness : float = currentUser.nodeWeaponHandler.springLinearStiffness
+	var springLinearDamping : float = currentUser.nodeWeaponHandler.springLinearDamping
+	var springAngularStiffness : float = currentUser.nodeWeaponHandler.springAngularStiffness
+	var springAngularDamping : float = currentUser.nodeWeaponHandler.springAngularDamping
+	
 	var displacement : Vector3 = getDisplacement()
 	var positionDisplacement : Vector2 = Vector2(displacement.x,displacement.y)
 	var rotationDisplacement : float = displacement.z
@@ -75,9 +74,10 @@ func updatePhysics() -> void:
 	
 	applyTorque(self,torque)
 	applyCentralForce(self, force)
-	applyCentralForce(nodeUser, -force)
+	applyCentralForce(currentUser, -force)
 
-# --|| PHYSICS HELPER FUNCTIONS ||--
+# --|| HELPER FUNCTIONS ||--
+
 
 ## Applies torque equal to [param value] to a specified physics body by [param body]
 func applyTorque(body : PhysicsBody2D,value : float) -> void:
@@ -91,12 +91,17 @@ func applyCentralForce(body : PhysicsBody2D, force : Vector2) -> void:
 
 ## Returns the displacement value used by the spring-like simulation.
 func getDisplacement() -> Vector3:
-	var userInput : PlayerInput = nodeUser.nodeInput
+	if not currentUser: return Vector3.ZERO
+	if not currentUser.nodeInput: return Vector3.ZERO
+	if not currentUser.nodeWeaponHandler: return Vector3.ZERO
 	
-	var targetDirection : Vector2 = userInput.aimPosition - nodeUser.global_position
+	var springLength : float = currentUser.nodeWeaponHandler.springLength
+	var userInput : PlayerInput = currentUser.nodeInput
 	
-	var tDirectionLength : float = clamp(targetDirection.length(),0,springLength) + springOffset
-	var targetPosition : Vector2 = nodeUser.global_position + targetDirection.normalized()*tDirectionLength
+	var targetDirection : Vector2 = userInput.aimPosition - currentUser.global_position
+	
+	var tDirectionLength : float = clamp(targetDirection.length(),0,springLength + springOffset) - springOffset
+	var targetPosition : Vector2 = currentUser.global_position + targetDirection.normalized()*tDirectionLength
 	var positionDisplacement : Vector2 = targetPosition - global_position
 	
 	var targetRot : float = atan2(targetDirection.y,targetDirection.x)
@@ -105,27 +110,3 @@ func getDisplacement() -> Vector3:
 	var rotationDisplacement : float = angle_difference(targetRot,currentRot)
 	
 	return Vector3(positionDisplacement.x,positionDisplacement.y,rotationDisplacement)
-
-# --|| ITEM HELPER FUNCTIONS ||--
-
-## Call this function when you want to use the item.
-func use() -> void:
-	if not nodeUser: return
-	used.emit()
-
-## Call this function when you want to equip the item.
-func equip(newUser : Node) -> void:
-	if not (newUser is  NetworkCharacter2D): return
-	if not newUser.nodeInput.isItemInteracting: return
-	nodeUser = newUser
-	equipped.emit()
-
-## Call this function when you want to unequip the item.
-func unequip() -> void:
-	nodeUser = null
-	unequipped.emit()
-
-## Call this function when you want to change the state of the highlight
-func changeHighlight(value : bool) -> void:
-	isHighlighted = value
-	nodeHighlight.visible = value
