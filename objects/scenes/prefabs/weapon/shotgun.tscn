@@ -4,14 +4,16 @@
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="2_qdq80"]
 [ext_resource type="Script" uid="uid://chr4omg2hy3yu" path="res://addons/netfox/rewindable-action.gd" id="2_ufa01"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="3_ufa01"]
+[ext_resource type="Script" uid="uid://cr0y5pcjxdnui" path="res://scripts/classes/input/itemInput.gd" id="5_nnssd"]
 [ext_resource type="AudioStream" uid="uid://bg0d1rctv2u4s" path="res://assets/sounds/weapons/shotgun_shoot.mp3" id="5_ufa01"]
 
-[sub_resource type="Gradient" id="Gradient_qdq80"]
-offsets = PackedFloat32Array(0, 0.9, 1)
-colors = PackedColorArray(1, 0.25, 0, 0, 1, 0.4166667, 0, 1, 1, 0.4166667, 0, 0)
+[sub_resource type="Gradient" id="Gradient_ufa01"]
+offsets = PackedFloat32Array(0, 0.99, 1)
+colors = PackedColorArray(1, 0.31666666, 0, 0, 1, 0.18333334, 0, 1, 1, 0.31666666, 0, 0)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_ufa01"]
-gradient = SubResource("Gradient_qdq80")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_nnssd"]
+gradient = SubResource("Gradient_ufa01")
+height = 1
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_0ir4w"]
 polygon = PackedVector2Array(-21, -12, 43, -12, 43, -6, 35, -6, 35, -4, 39, -4, 39, 0, 32, 0, 32, 1, 31, 2, 11, 2, 10, 1, 10, 0, -8, 0, -24, 17, -31, 17, -35, 12, -35, 6, -26, -3)
@@ -46,19 +48,20 @@ scale_max = 1.5
 scale_curve = SubResource("CurveTexture_vq4w0")
 color = Color(1, 0.7, 0, 1)
 
-[node name="Shotgun" type="RigidBody2D" unique_id=1842884908 node_paths=PackedStringArray("muzzleFlashEmitter", "fireSound", "nodeUseAction", "nodeSynchronizer", "nodeHighlight")]
+[node name="Shotgun" type="RigidBody2D" unique_id=1842884908 node_paths=PackedStringArray("muzzleFlashEmitter", "fireSound", "nodeUseAction", "nodeInput", "nodeSynchronizer", "nodeHighlight")]
 z_index = 2
 collision_layer = 4
 mass = 0.1
 can_sleep = false
 script = ExtResource("1_qdq80")
-isAutomatic = false
-pelletOffset = Vector2(43.999996, -8.999999)
+cooldown = 30
+pelletOffset = Vector2(44, -9)
 pelletCount = 4
-pelletGradient = SubResource("GradientTexture2D_ufa01")
+pelletGradient = SubResource("GradientTexture2D_nnssd")
 muzzleFlashEmitter = NodePath("MuzzleFlash")
 fireSound = NodePath("FireSound")
 nodeUseAction = NodePath("UseAction")
+nodeInput = NodePath("Input")
 springOffset = 43.0
 nodeSynchronizer = NodePath("Synchronizer")
 nodeHighlight = NodePath("Outline")
@@ -73,6 +76,7 @@ script = ExtResource("2_qdq80")
 root = NodePath("..")
 enable_prediction = true
 state_properties = Array[String]([":physics_state", ":isEquipped", ":currentUser", ":cooldownTicksLeft", ":shotsLeft"])
+input_properties = Array[String](["Input:isUsing"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="Interpolator" type="Node" parent="." unique_id=1921027566 node_paths=PackedStringArray("root")]
@@ -80,6 +84,11 @@ script = ExtResource("3_ufa01")
 root = NodePath("..")
 properties = Array[String]([":transform"])
 metadata/_custom_type_script = "uid://dour8fehaaugp"
+
+[node name="Input" type="Node" parent="." unique_id=1548117425 node_paths=PackedStringArray("item")]
+script = ExtResource("5_nnssd")
+item = NodePath("..")
+metadata/_custom_type_script = "uid://cr0y5pcjxdnui"
 
 [node name="FireSound" type="AudioStreamPlayer2D" parent="." unique_id=624298892]
 stream = ExtResource("5_ufa01")

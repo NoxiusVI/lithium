@@ -47,6 +47,8 @@ class_name RaycastWeapon2D extends Item2D
 @export_group("Nodes","node")
 ## The action responsible for item use.
 @export var nodeUseAction : RewindableAction
+## The input node of this item.
+@export var nodeInput : ItemInput
 
 ## How many ticks of cooldown we have left.
 var cooldownTicksLeft : int = 0
@@ -87,9 +89,8 @@ func updateAction() -> void:
 	if not isAttacking: onActionReleased()
 	
 	nodeUseAction.set_active(isAttacking and canFire())
-	
 	match nodeUseAction.get_status():
-		RewindableAction.ACTIVE, RewindableAction.CONFIRMING:
+		RewindableAction.CONFIRMING, RewindableAction.ACTIVE:
 			onActionConfirmed()
 		RewindableAction.CANCELLING:
 			onActionCancelled()
