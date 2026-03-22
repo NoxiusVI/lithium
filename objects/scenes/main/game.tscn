@@ -74,7 +74,6 @@ texture_filter = 2
 texture_repeat = 1
 
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_7volg"]
-output_port_for_preview = 0
 source = 5
 
 [sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_b1lii"]

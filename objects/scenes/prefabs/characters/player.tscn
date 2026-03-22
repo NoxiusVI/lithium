@@ -12,6 +12,30 @@
 [ext_resource type="Script" uid="uid://c1704or08bx7g" path="res://scripts/classes/2D/weaponHandler2D.gd" id="6_b8a5l"]
 [ext_resource type="Script" uid="uid://cgtfp40c35guy" path="res://scripts/classes/2D/trail2D.gd" id="7_f5t23"]
 
+[sub_resource type="GDScript" id="GDScript_b8a5l"]
+resource_name = "HealthDisplay"
+script/source = "extends Node
+
+@export var playerMaterial : Material
+
+var ourMaterial : Material
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	ourMaterial = playerMaterial.duplicate()
+	$\"../Polygon\".set(\"material\",ourMaterial)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	ourMaterial.set(\"shader_parameter/Progress\",float($\"..\".hpLeft)/float($\"..\".maxHP))
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b8a5l"]
+shader = ExtResource("4_87xi7")
+shader_parameter/BorderThickness = 0.05
+shader_parameter/Progress = 1.0
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_b8a5l"]
 radius = 75.0
 
@@ -70,7 +94,7 @@ metadata/_custom_type_script = "uid://duohyi25xigja"
 script = ExtResource("3_trxra")
 root = NodePath("..")
 enable_prediction = true
-state_properties = Array[String]([":physics_state", ":jumpBufferRemaining", ":coyoteTimeRemaining", ":jumpAlreadyPressed", "WeaponHandler:currentItem", "WeaponHandler:highlightedItem", "WeaponHandler:interactTicksLeft", "WeaponHandler:attackTicksLeft"])
+state_properties = Array[String]([":physics_state", ":jumpBufferRemaining", ":coyoteTimeRemaining", ":jumpAlreadyPressed", ":hpLeft", "WeaponHandler:currentItem", "WeaponHandler:highlightedItem", "WeaponHandler:interactTicksLeft"])
 input_properties = Array[String](["Input:movement", "Input:aimPosition", "Input:isAttacking", "Input:isItemInteracting"])
 enable_input_broadcast = false
 metadata/_custom_type_script = "uid://d350u8evihs1u"
@@ -86,11 +110,18 @@ process_physics_priority = -1
 script = ExtResource("5_87xi7")
 metadata/_custom_type_script = "uid://03iif312gl6g"
 
-[node name="WeaponHandler" type="Area2D" parent="." unique_id=977498853 node_paths=PackedStringArray("nodeInput")]
+[node name="HealthDisplay" type="Node" parent="." unique_id=242755239]
+script = SubResource("GDScript_b8a5l")
+playerMaterial = SubResource("ShaderMaterial_b8a5l")
+
+[node name="WeaponHandler" type="Area2D" parent="." unique_id=977498853 node_paths=PackedStringArray("nodeInput", "currentItem")]
 collision_layer = 8
 collision_mask = 4
 script = ExtResource("6_b8a5l")
+springLinearStiffness = 64.0
+springLinearDamping = 4.0
 nodeInput = NodePath("../Input")
+currentItem = NodePath("")
 metadata/_custom_type_script = "uid://c1704or08bx7g"
 
 [node name="Collider" type="CollisionShape2D" parent="WeaponHandler" unique_id=852939536]

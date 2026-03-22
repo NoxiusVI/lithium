@@ -63,7 +63,9 @@ var debugger : NetfoxLogger = NetfoxLogger.new("items","RayCastWeapon2D")
 # --|| MAIN FUNCTIONS ||--
 
 func _ready() -> void:
+	nodeUseAction.mutate(self)
 	shotsLeft = magSize
+	
 	super._ready()
 
 func _rollback_tick(delta : float, tick : int, isFresh : bool) -> void:
@@ -85,6 +87,7 @@ func updateAction() -> void:
 	if not isAttacking: onActionReleased()
 	
 	nodeUseAction.set_active(isAttacking and canFire())
+	
 	match nodeUseAction.get_status():
 		RewindableAction.ACTIVE, RewindableAction.CONFIRMING:
 			onActionConfirmed()
@@ -99,6 +102,11 @@ func onActionConfirmed() -> void:
 	cooldownTicksLeft = cooldown
 	hasFired = not isAutomatic
 	
+	var isNew : bool = false
+	if not nodeUseAction.has_context():
+		nodeUseAction.set_context(true)
+		isNew = true
+	
 	var origin : Vector2 = global_position + pelletOffset.rotated(global_rotation)
 	var direction : Vector2 = Vector2(pelletRange, 0.0).rotated(global_rotation)
 	
@@ -108,25 +116,23 @@ func onActionConfirmed() -> void:
 	for _index : int in range(pelletCount):
 		var rNum : float = rng.randf_range(-pelletSpread, pelletSpread)
 		var rDirection : Vector2 = direction.rotated(deg_to_rad(rNum))
-		var raycastData : Dictionary = raycast(origin,rDirection)
+		var rTarget : Vector2 = origin + rDirection
+		var raycastData : Dictionary = raycast(origin,rTarget)
+		
+		if not raycastData.is_empty():
+			rTarget = raycastData.position
+			onHit(raycastData.collider)
 		
 		origins.append(origin)
-		if raycastData.is_empty():
-			targets.append(origin + rDirection)
-		else:
-			targets.append(raycastData.position)
-	
-	debugger.debug("Action confirmed?")
-	
-	if not nodeUseAction.has_context():
-		nodeUseAction.set_context(true)
-		shotEffects(origins,targets)
+		targets.append(rTarget)
 	
 	var linearRecoil : Vector2 = Vector2(-recoilLinearPower, 0.0).rotated(global_rotation)
-	
 	if recoilAffectsUser: currentUser.apply_central_impulse(linearRecoil)
 	apply_central_impulse(linearRecoil)
 	apply_torque_impulse(-recoilAngularPower)
+	
+	if isNew:
+		shotEffects(origins,targets)
 
 func onActionCancelled() -> void:
 	debugger.debug("Unfired!")
@@ -147,11 +153,14 @@ func shotEffects(origins : Array[Vector2], targets : Array[Vector2]) -> void:
 	newPellets.visualizePellets(0.1,origins,targets,pelletGradient)
 	get_parent().add_child.call_deferred(newPellets)
 
-func raycast(origin : Vector2, direction : Vector2) -> Dictionary:
-	var target : Vector2 = origin + direction
-	
+func raycast(origin : Vector2, target : Vector2) -> Dictionary:
 	var space : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(origin, target, 7)
 	query.hit_from_inside = true
 
 	return space.intersect_ray(query)
+
+func onHit(collider : CollisionObject2D) -> void:
+	if collider.has_method("takeDamage"):
+		collider.takeDamage(damage)
+		nodeUseAction.mutate(collider)

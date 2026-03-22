@@ -3,6 +3,8 @@
 [sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_kafic"]
 parameter_name = "BorderThickness"
 hint = 1
+default_value_enabled = true
+default_value = 0.05
 
 [sub_resource type="VisualShaderNodeVectorDecompose" id="VisualShaderNodeVectorDecompose_3anck"]
 output_port_for_preview = 1
@@ -67,6 +69,8 @@ function = 14
 [sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_iifua"]
 parameter_name = "Progress"
 hint = 1
+default_value_enabled = true
+default_value = 1.0
 
 [resource]
 mode = 1
@@ -85,7 +89,7 @@ nodes/fragment/7/position = Vector2(780, 1140)
 nodes/fragment/8/node = SubResource("VisualShaderNodeFloatOp_av0hl")
 nodes/fragment/8/position = Vector2(600, 1100)
 nodes/fragment/9/node = SubResource("VisualShaderNodeFloatParameter_iifua")
-nodes/fragment/9/position = Vector2(240, 920)
+nodes/fragment/9/position = Vector2(240, 880)
 nodes/fragment/10/node = SubResource("VisualShaderNodeFloatParameter_kafic")
 nodes/fragment/10/position = Vector2(-620, -740)
 nodes/fragment/11/node = SubResource("VisualShaderNodeVectorDecompose_3anck")

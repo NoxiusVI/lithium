@@ -61,6 +61,10 @@ func _rollback_tick(_delta : float, _tick : int,_isFresh : bool) -> void:
 
 # --|| LOGIC FUNCTIONS ||--
 
+## Handles taking damage.
+func takeDamage(value : int) -> void:
+	hpLeft = max(hpLeft - value, 0)
+
 ## Handles jumping. Meant to be ran every tick.
 func jump() -> void:
 	jumpBufferRemaining = max(jumpBufferRemaining - 1, 0)
